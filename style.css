@@ -57,7 +57,7 @@ body {
 
 .scroll {
   position: fixed;
-  top: 0;
+  top: -100px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -65,18 +65,8 @@ body {
   padding: 10px 30px;
   background-color: #203864;
   z-index: 3;
-  animation: down 0.5s ease;
-}
-
-@keyframes down {
-  0% {
-    top: -100px;
-    opacity: 0;
-  }
-  100% {
-    top: 0;
-    opacity: 1;
-  }
+  transition: 0.5s ease;
+  height: 70px;
 }
 
 .scroll .nav-links {

@@ -1,96 +1,317 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+/* Modern CSS Reset */
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box; /* Makes layout calculations more intuitive */
   font-family: "Poppins", sans-serif;
 }
 
 body {
-  position: relative;
-  width: 100%;
-  height: 100vh;
+  background-color: #f8f9fa; /* A light grey background for a softer look */
+  color: #333;
 }
 
-nav {
+/* --- Navigation Bar --- */
+.header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 0 5%;
+}
+
+.navbar {
   display: grid;
-  grid-template-columns: 40% 60%;
-  width: 50%;
-  position: absolute;
-  top: 20px;
-  left: 0;
-}
-
-.logo {
-  width: 130px;
+  grid-template-columns: 20% 27% 53%;
+  align-items: center;
+  height: 80px;
 }
 
 .logo img {
-  max-width: 100%;
-  margin-left: 30px;
+  height: 60px; /* Control logo size by height */
 }
 
-.quickLinks {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.logo-right img {
+  height: 40px;
 }
 
-.quickLinks div {
-  font-size: 1 rem;
-  font-weight: 600;
-}
-
-.heroImage {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-}
-
-.heroImage img {
-  max-width: 100%;
-}
-
-.secondLogo {
-  width: 130px;
+.logo-right {
+  justify-self: right;
   z-index: 1;
-  position: absolute;
-  top: 20px;
-  right: 30px;
 }
 
-.secondLogo img {
-  max-width: 100%;
+.nav-links {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.9rem;
+  position: relative;
+  padding: 5px 0;
+}
+
+/* Underline effect on hover */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #203864;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* --- Hero Section --- */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  background-color: #ffffff;
+  position: relative;
 }
 
 aside {
+  flex: 1;
+  max-width: 35%;
+  margin-left: 70px;
+}
+
+.heroImage {
+  flex: 1;
+  max-width: 50%;
+}
+
+.heroImage img {
+  max-width: 52%;
+  height: auto;
   position: absolute;
-  top: 0;
-  width: 30%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 80px;
+  top: -80px;
+  right: 0;
 }
 
 aside h3 {
   color: #203864;
+  font-weight: 900;
 }
 
 aside h1 {
-  font-size: 4rem;
+  font-size: 3.5rem;
+  line-height: 1.2; /* Improved line spacing */
+  margin: 0.5rem 0 1rem 0;
+}
+
+aside p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
 }
 
 aside button {
-  width: 30%;
+  width: auto; /* Let content define width */
+  padding: 12px 30px; /* More padding */
   border-radius: 50px;
   margin-top: 20px;
   border: none;
   background-color: #203864;
   color: white;
-  font-weight: 500;
-  font-size: 1.2rem;
-  padding: 10px;
+  font-weight: 600; /* Bolder text */
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+aside button:hover {
+  background-color: #1a2c4f; /* Darker shade on hover */
+  transform: translateY(-3px);
+}
+
+/* --- Main Content: Job Cards --- */
+.intro {
+  text-align: center;
+  background-color: #add8e6;
+}
+
+.intro div {
+  padding: 50px 10%;
+}
+
+main {
+  display: grid;
+  /* Responsive grid: creates as many 350px columns as fit, and distributes extra space */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 4rem 5%; /* Consistent padding */
+}
+
+.jobCards {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px; /* Softer corners */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.jobCards:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.jobCards h4 {
+  font-size: 1.25rem;
+  color: #203864;
+  margin-bottom: 0.5rem;
+}
+
+.jobCards p {
+  flex-grow: 1; /* Allows cards with different text lengths to align buttons at the bottom */
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.jobCards button {
+  background-color: #203864;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  align-self: flex-start; /* Button doesn't stretch */
+  transition: background-color 0.3s ease;
+}
+
+.jobCards button:hover {
+  background-color: #1a2c4f;
+}
+
+.jobCards div {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.jobCards div a {
+  color: #203864;
+}
+
+/* --- Footer Section --- */
+.footer-section {
+  background-color: #203864;
+  color: #e0e0e0cf;
+  padding: 4rem 5% 2rem;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap; /* Allows columns to wrap on smaller screens */
+}
+
+.footer-about {
+  flex: 2;
+  min-width: 300px; /* Prevents it from getting too squished */
+}
+
+.footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Add background to make transparent logos visible */
+.footer-logo-vtsa,
+.footer-logo-schneider {
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.footer-logo-vtsa {
+  height: 100px;
+}
+
+.footer-logo-schneider {
+  height: 100px;
+}
+
+.footer-about p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.footer-contact-info {
+  margin-top: 2rem;
+}
+
+.footer-contact-info p {
+  margin-bottom: 0.5rem;
+}
+
+.footer-contact-info a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-contact-info a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-links-column {
+  flex: 1;
+  min-width: 260px; /* Adjust min-width for address content */
+}
+
+.footer-links-column h4,
+.footer-contact-info h4 {
+  color: #e0e0e0cf;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.invisible-heading {
+  visibility: hidden;
+}
+
+.footer-address p {
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.footer-address strong {
+  font-weight: 600;
+  color: #e0e0e0cf;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #3a4a6b; /* A subtle separator line */
+  font-size: 0.85rem;
 }

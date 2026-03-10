@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 window.addEventListener("scroll", function () {
   let navbar = document.getElementById("navbar");
 
@@ -8,7 +7,7 @@ window.addEventListener("scroll", function () {
     navbar.style.display = "none";
   }
 });
-=======
+
 document.addEventListener("DOMContentLoaded", () => {
     const applyLinks = document.querySelectorAll(
       ".hero-apply-button, .job-apply-button"
@@ -65,4 +64,3 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
   
->>>>>>> 24cbed69ac36630b506b3342dc48d8a25dcca95f

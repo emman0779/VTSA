@@ -55,6 +55,39 @@ body {
   padding: 5px 0;
 }
 
+.scroll {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background-color: #203864;
+  z-index: 3;
+  animation: down 0.5s ease;
+}
+
+@keyframes down {
+  0% {
+    top: -100px;
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+.scroll .nav-links {
+  display: flex;
+  width: 40%;
+}
+
+.scroll .nav-links li a {
+  color: #ffffff;
+}
+
 /* Underline effect on hover */
 .nav-links a::after {
   content: "";

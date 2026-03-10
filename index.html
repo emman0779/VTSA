@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
     <title>Document</title>
   </head>
   <body>
@@ -14,7 +15,7 @@
         /></a>
         <ul class="nav-links">
           <li><a href="#">Home</a></li>
-          <li><a href="#">Applied</a></li>
+          <li><a href="applied.html">Applied</a></li>
           <li><a href="#">Status</a></li>
           <li><a href="#">Profile</a></li>
         </ul>
@@ -34,7 +35,7 @@
           quibusdam blanditiis nihil ad iure molestias! Ad ipsum dolores
           praesentium rem fuga?
         </p>
-        <button>APPLY NOW!</button>
+        <a href="applied.html" class="hero-apply-button" role="button">APPLY NOW!</a>
       </aside>
       <div class="heroImage">
         <img
@@ -68,7 +69,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
       <div class="jobCards">
@@ -79,7 +80,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
       <div class="jobCards">
@@ -90,7 +91,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
       <div class="jobCards">
@@ -101,7 +102,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
       <div class="jobCards">
@@ -112,7 +113,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
       <div class="jobCards">
@@ -123,7 +124,7 @@
         </p>
         <div>
           <a href="">View Details</a>
-          <button>APPLY</button>
+          <a href="applied.html" class="job-apply-button" role="button">APPLY</a>
         </div>
       </div>
     </main>
@@ -200,5 +201,16 @@
         <p>&copy; 2026 VTSA International Inc. All Rights Reserved.</p>
       </div>
     </footer>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal-overlay">
+      <div class="modal-content">
+        <p>Do you want to send your resume?</p>
+        <div class="modal-actions">
+          <button id="confirm-yes">Yes</button>
+          <button id="confirm-no">No</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

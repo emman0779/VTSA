@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
       showModal();
     });
   });
-<<<<<<< HEAD:script.js
 
   // When the "Yes" button is clicked...
   confirmYesBtn.addEventListener("click", () => {
@@ -63,7 +62,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-=======
-  
-  
->>>>>>> b588a192ee9f8573b101a44322956c0233be2a28:applicant_page/script.js

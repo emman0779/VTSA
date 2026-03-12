@@ -1,116 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body class="dashboard-page">
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="dashboard-page">
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <a href="#home" class="logo">
-                <img src="../applicant_page/images/vtsa_logo.png" alt="VTSA Logo">
-            </a>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="#profile" class="nav-link active"><i class="fas fa-user-edit"></i> <span>Update Information</span></a></li>
-            </ul>
-        </nav>
-        <div class="sidebar-footer">
-            <ul>
-                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
-            </ul>
-        </div>
+      <div class="sidebar-header">
+        <a href="#home" class="logo">
+          <img src="../applicant_page/images/vtsa_logo.png" alt="VTSA Logo" />
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#profile" class="nav-link active"
+              ><i class="fas fa-user-edit"></i>
+              <span>Update Information</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <ul>
+          <li>
+            <a href="login.html"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
     </aside>
     <div class="main-container">
-        <header class="top-bar">
-            <button id="sidebar-toggle" class="sidebar-toggle-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </header>
-        <main class="main-content">
-            <!-- Profile/Information Update Section -->
-            <section id="profile" class="dashboard-section"> 
-                <h1 class="centered-header">Employee Personnel Record</h1> 
-                <p class="centered-header-description">Please fill out the form completely and accurately.</p>
+      <header class="top-bar">
+        <button id="sidebar-toggle" class="sidebar-toggle-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </header>
+      <main class="main-content">
+        <!-- Profile/Information Update Section -->
+        <section id="profile" class="dashboard-section">
+          <h1 class="centered-header">Employee Personnel Record</h1>
+          <p class="centered-header-description">
+            Please fill out the form completely and accurately.
+          </p>
 
-                <div class="personnel-form-wrapper">
-                    <div id="notification" class="notification"></div>
+          <div class="personnel-form-wrapper">
+            <div id="notification" class="notification"></div>
 
-                    <form id="employee-form" onsubmit="event.preventDefault(); alert('Form submitted for review!');" novalidate>
-                        <input type="hidden" name="employee_id" value="1">
+            <form
+              id="employee-form"
+              onsubmit="
+                event.preventDefault();
+                alert('Form submitted for review!');
+              "
+              novalidate
+            >
+              <input type="hidden" name="employee_id" value="1" />
 
-                        <fieldset>
-                            <legend>Personal Information</legend>
-                            <div class="form-group"><label for="surname">Surname</label><input type="text" id="surname" name="surname" required></div>
-                            <div class="form-group"><label for="first_name">First Name</label><input type="text" id="first_name" name="first_name" required></div>
-                            <div class="form-group"><label for="middle_name">Middle Name (Optional)</label><input type="text" id="middle_name" name="middle_name"></div>
-                            <div class="form-group">
-                                <label for="civil_status">Civil Status</label>
-                                <select id="civil_status" name="civil_status" required>
-                                    <option value="">-- Select --</option>
-                                    <option value="Single">Single</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Widowed">Widowed</option>
-                                    <option value="Separated">Separated</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="birth_date">Date of Birth</label>
-                                <input type="date" id="birth_date" name="birth_date" required>
-                            </div>
-                        </fieldset>
-
-                        <fieldset>
-                            <legend>Address Information</legend>
-                            <div class="form-group"><label for="permanent_address">Permanent Address</label><textarea id="permanent_address" name="permanent_address" rows="3" required></textarea></div>
-                            <div class="form-group radio-group">
-                                <label>Is your current address your permanent address?</label>
-                                <div><input type="radio" id="is_permanent_yes" name="is_address_permanent" value="yes" checked><label for="is_permanent_yes">Yes</label></div>
-                                <div><input type="radio" id="is_permanent_no" name="is_address_permanent" value="no"><label for="is_permanent_no">No</label></div>
-                            </div>
-                            <div class="form-group" id="current_address_group" style="display: none;"><label for="current_address">Current Address</label><textarea id="current_address" name="current_address" rows="3"></textarea></div>
-                        </fieldset>
-
-                        <fieldset>
-                            <legend>Contact Information</legend>
-                            <div class="form-group"><label for="contact_number">Active Personal Contact Number</label><input type="tel" id="contact_number" name="contact_number" required placeholder="e.g., 09171234567"></div>
-                            <div class="form-group"><label for="other_contact_number">Other Contact Number (Optional)</label><input type="tel" id="other_contact_number" name="other_contact_number" placeholder="e.g., 09181234567"></div>
-                            <div class="form-group"><label for="personal_email">Updated Personal Email Address</label><input type="email" id="personal_email" name="personal_email" required placeholder="e.g., name@example.com"></div>
-                            <div class="form-group"><label for="work_email">Work Email Address</label><input type="email" id="work_email" name="work_email" placeholder="e.g., name@vtsa.com"></div>
-                        </fieldset>
-
-                        <fieldset>
-                            <legend>Emergency Contact</legend>
-                            <div class="form-group"><label for="emergency_contact_person">Emergency Contact Person</label><input type="text" id="emergency_contact_person" name="emergency_contact_person" required></div>
-                            <div class="form-group"><label for="emergency_contact_relationship">Relationship</label><input type="text" id="emergency_contact_relationship" name="emergency_contact_relationship" required placeholder="e.g., Spouse, Parent, Sibling"></div>
-                            <div class="form-group"><label for="emergency_contact_number">Emergency Contact Number</label><input type="tel" id="emergency_contact_number" name="emergency_contact_number" required></div>
-                        </fieldset>
-
-                        <fieldset>
-                            <legend>Legal Agreements</legend>
-                            <div class="form-group checkbox-group">
-                                <input type="checkbox" id="data_privacy_consent" name="data_privacy_consent" required>
-                                <label for="data_privacy_consent">I consent to the collection and processing of my personal data in accordance with the Data Privacy Act.</label>
-                            </div>
-                            <div class="form-group checkbox-group">
-                                <input type="checkbox" id="declaration" name="declaration" required>
-                                <label for="declaration">I declare that the information I have provided is true, correct, and complete to the best of my knowledge.</label>
-                            </div>
-                        </fieldset>
-
-                        <div class="form-buttons">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="reset" class="btn btn-secondary">Reset</button>
-                        </div>
-                    </form>
+              <fieldset>
+                <legend>Personal Information</legend>
+                <div class="form-group">
+                  <label for="surname">Surname</label
+                  ><input type="text" id="surname" name="surname" required />
                 </div>
-            </section>
-        </main>
+                <div class="form-group">
+                  <label for="first_name">First Name</label
+                  ><input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="middle_name">Middle Name (Optional)</label
+                  ><input type="text" id="middle_name" name="middle_name" />
+                </div>
+                <div class="form-group">
+                  <label for="civil_status">Civil Status</label>
+                  <select id="civil_status" name="civil_status" required>
+                    <option value="">-- Select --</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Widowed">Widowed</option>
+                    <option value="Separated">Separated</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="birth_date">Date of Birth</label>
+                  <input
+                    type="date"
+                    id="birth_date"
+                    name="birth_date"
+                    required
+                  />
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Address Information</legend>
+                <div class="form-group">
+                  <label for="permanent_address">Permanent Address</label
+                  ><textarea
+                    id="permanent_address"
+                    name="permanent_address"
+                    rows="3"
+                    required
+                  ></textarea>
+                </div>
+                <div class="form-group radio-group">
+                  <label>Is your current address your permanent address?</label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="is_permanent_yes"
+                      name="is_address_permanent"
+                      value="yes"
+                      checked
+                    /><label for="is_permanent_yes">Yes</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="is_permanent_no"
+                      name="is_address_permanent"
+                      value="no"
+                    /><label for="is_permanent_no">No</label>
+                  </div>
+                </div>
+                <div
+                  class="form-group"
+                  id="current_address_group"
+                  style="display: none"
+                >
+                  <label for="current_address">Current Address</label
+                  ><textarea
+                    id="current_address"
+                    name="current_address"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Contact Information</legend>
+                <div class="form-group">
+                  <label for="contact_number"
+                    >Active Personal Contact Number</label
+                  ><input
+                    type="tel"
+                    id="contact_number"
+                    name="contact_number"
+                    required
+                    placeholder="e.g., 09171234567"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="other_contact_number"
+                    >Other Contact Number (Optional)</label
+                  ><input
+                    type="tel"
+                    id="other_contact_number"
+                    name="other_contact_number"
+                    placeholder="e.g., 09181234567"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="personal_email"
+                    >Updated Personal Email Address</label
+                  ><input
+                    type="email"
+                    id="personal_email"
+                    name="personal_email"
+                    required
+                    placeholder="e.g., name@example.com"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="work_email">Work Email Address</label
+                  ><input
+                    type="email"
+                    id="work_email"
+                    name="work_email"
+                    placeholder="e.g., name@vtsa.com"
+                  />
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Emergency Contact</legend>
+                <div class="form-group">
+                  <label for="emergency_contact_person"
+                    >Emergency Contact Person</label
+                  ><input
+                    type="text"
+                    id="emergency_contact_person"
+                    name="emergency_contact_person"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="emergency_contact_relationship"
+                    >Relationship</label
+                  ><input
+                    type="text"
+                    id="emergency_contact_relationship"
+                    name="emergency_contact_relationship"
+                    required
+                    placeholder="e.g., Spouse, Parent, Sibling"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="emergency_contact_number"
+                    >Emergency Contact Number</label
+                  ><input
+                    type="tel"
+                    id="emergency_contact_number"
+                    name="emergency_contact_number"
+                    required
+                  />
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Legal Agreements</legend>
+                <div class="form-group checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="data_privacy_consent"
+                    name="data_privacy_consent"
+                    required
+                  />
+                  <label for="data_privacy_consent"
+                    >I consent to the collection and processing of my personal
+                    data in accordance with the Data Privacy Act.</label
+                  >
+                </div>
+                <div class="form-group checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="declaration"
+                    name="declaration"
+                    required
+                  />
+                  <label for="declaration"
+                    >I declare that the information I have provided is true,
+                    correct, and complete to the best of my knowledge.</label
+                  >
+                </div>
+              </fieldset>
+
+              <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
     </div>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

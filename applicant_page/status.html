@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Link to the specific CSS file for Status page -->
+    <link rel="stylesheet" href="status.css" />
+    <!-- Font Awesome Link for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>Application Status</title>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">
+          <img src="../applicant_page/images/vtsa_white.png" alt="VTSA Logo" />
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html"
+              ><i class="fas fa-home"></i> <span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="applied.html"
+              ><i class="fas fa-check-square"></i> <span>Applied</span></a
+            >
+          </li>
+          <li>
+            <a href="status.html" class="active"
+              ><i class="fas fa-tasks"></i> <span>Status</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><i class="fas fa-user"></i> <span>Profile</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <ul>
+          <li>
+            <a href="login.html"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="page-header">
+        <h1>Application Status</h1>
+        <p>Detailed tracking of your ongoing applications</p>
+      </header>
+
+      <div class="status-container">
+        <!-- Application 1: Active Interview Phase -->
+        <div class="status-card">
+          <div class="status-header">
+            <div>
+              <h3 class="role-title">Admin Staff</h3>
+              <p class="company-name">VTSA International Inc.</p>
+              <p class="application-id">ID: #APP-2026-089</p>
+            </div>
+            <button class="action-btn">View Email</button>
+          </div>
+
+          <!-- Progress Stepper -->
+          <div class="progress-track">
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+              <p>Applied</p>
+              <span class="date">Feb 28</span>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-search"></i></div>
+              <p>Review</p>
+              <span class="date">Mar 02</span>
+            </div>
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-comments"></i></div>
+              <p>Interview</p>
+              <span class="date">In Progress</span>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-briefcase"></i></div>
+              <p>Offer</p>
+            </div>
+          </div>
+
+          <!-- Recent Activity Log -->
+          <div class="activity-log">
+            <h4>Latest Activity</h4>
+            <div class="log-item">
+              <div class="log-dot"></div>
+              <p>
+                <strong>Initial Interview Scheduled</strong> - You have an
+                interview scheduled for March 15, 2026 at 10:00 AM via Zoom.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Application 2: Under Review -->
+        <div class="status-card">
+          <div class="status-header">
+            <div>
+              <h3 class="role-title">Test and Commissioning Technician</h3>
+              <p class="company-name">VTSA International Inc.</p>
+              <p class="application-id">ID: #APP-2026-102</p>
+            </div>
+            <button class="action-btn">Withdraw</button>
+          </div>
+
+          <div class="progress-track">
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+              <p>Applied</p>
+              <span class="date">Mar 10</span>
+            </div>
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-user-check"></i></div>
+              <p>HR Screening</p>
+              <span class="date">Current</span>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-comments"></i></div>
+              <p>Interview</p>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-briefcase"></i></div>
+              <p>Offer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -78,6 +78,11 @@ body {
   color: #ffffff;
 }
 
+/* Ensure underline is visible on dark scroll header */
+.scroll .nav-links a::after {
+  background-color: #ffffff;
+}
+
 /* Underline effect on hover */
 .nav-links a::after {
   content: "";
@@ -90,7 +95,8 @@ body {
   transition: width 0.3s ease;
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
   width: 100%;
 }
 

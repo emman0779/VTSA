@@ -216,6 +216,7 @@
   align-items: center;
   padding: 0 30px;
   flex-shrink: 0;
+  position: relative; /* For centering the title */
 }
 
 .sidebar-toggle-btn {
@@ -224,6 +225,18 @@
   font-size: 1.5rem;
   color: var(--primary-color);
   cursor: pointer;
+}
+
+.top-bar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Prevent wrapping on smaller screens */
 }
 
 .sidebar {
@@ -244,6 +257,11 @@
 
 .sidebar-header .sidebar-title {
   color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
 }
 .sidebar-header .logo img {
   height: 45px;
@@ -360,7 +378,9 @@ body.sidebar-collapsed .sidebar {
 }
 
 body.sidebar-collapsed .sidebar-nav span,
-body.sidebar-collapsed .sidebar-footer span {
+body.sidebar-collapsed .sidebar-footer span,
+body.sidebar-collapsed .sidebar-header .logo,
+body.sidebar-collapsed .sidebar-header .sidebar-title {
   display: none;
 }
 body.sidebar-collapsed .sidebar-nav li a,
@@ -776,3 +796,12 @@ legend {
     justify-content: center;
     margin-top: 1.5rem;
 }
+
+/* --- Notification Modal Specifics --- */
+.notification-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+.notification-success { color: var(--success-color); }
+.notification-error { color: var(--danger-color); }
+.notification-info { color: var(--primary-color); }

@@ -9,13 +9,13 @@
 }
 
 body {
-  background-color: #f8f9fa; /* A light grey background for a softer look */
+  background-color: white;
   color: #333;
 }
 
 /* --- Navigation Bar --- */
 .header {
-  background-color: #ffffff;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 0 5%;
 }
@@ -107,7 +107,8 @@ body {
   justify-content: space-between;
   padding: 2rem;
   min-height: calc(100vh - 80px);
-  background-color: #ffffff;
+  background-size: 400% 400%;
+  animation: techGradient 15s ease infinite;
   position: relative;
 }
 
@@ -162,12 +163,14 @@ aside .hero-apply-button {
   cursor: pointer;
   transition:
     background-color 0.3s ease,
-    transform 0.3s ease;
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 aside .hero-apply-button:hover {
   background-color: #1a2c4f; /* Darker shade on hover */
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(32, 56, 100, 0.3);
 }
 
 /* --- Main Content: Job Cards --- */
@@ -198,12 +201,26 @@ main {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   transition:
     transform 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  animation: fadeInUp 0.7s ease-out backwards;
 }
 
 .jobCards:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(32, 56, 100, 0.15);
+  border-color: rgba(32, 56, 100, 0.5);
+}
+
+/* Staggered animation for the first few cards */
+.jobCards:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.jobCards:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.jobCards:nth-child(4) {
+  animation-delay: 0.3s;
 }
 
 .jobCards h4 {
@@ -424,4 +441,58 @@ main {
 
 #confirm-no:hover {
   background-color: #dcdcdc;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .navbar {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 15px 0;
+    gap: 10px;
+  }
+
+  .logo img {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .nav-links {
+    justify-content: center;
+    gap: 20px;
+    font-size: 0.85rem;
+  }
+
+  .logo-right {
+    display: none; /* Hide secondary logo on mobile to save space */
+  }
+
+  .hero {
+    flex-direction: column-reverse;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 5%;
+  }
+
+  aside {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .heroImage img {
+    position: relative;
+    top: 0;
+    right: 0;
+    max-width: 80%;
+    margin-bottom: 2rem;
+  }
+
+  aside h1 {
+    font-size: 2.5rem;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
 }

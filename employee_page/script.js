@@ -241,4 +241,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // --- Employee Update Modal Logic ---
+  const openUpdateModalBtn = document.getElementById("open-update-modal");
+  const updateModal = document.getElementById("update-modal");
+  const closeUpdateModalBtn = document.getElementById("close-update-modal");
+  const cancelUpdateBtn = document.getElementById("cancel-update");
+
+  if (openUpdateModalBtn && updateModal) {
+    openUpdateModalBtn.addEventListener("click", function () {
+      updateModal.classList.add("visible");
+    });
+    const closeModal = () => {
+      updateModal.classList.remove("visible");
+    };
+
+    if (closeUpdateModalBtn)
+      closeUpdateModalBtn.addEventListener("click", closeModal);
+    if (cancelUpdateBtn) cancelUpdateBtn.addEventListener("click", closeModal);
+  }
 });

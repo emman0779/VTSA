@@ -70,6 +70,11 @@
   white-space: nowrap; /* Prevent wrapping on smaller screens */
 }
 
+.header-logo {
+  margin-left: auto;
+  height: 50px;
+}
+
 .sidebar {
   width: 260px;
   background-color: var(--primary-color);

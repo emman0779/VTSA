@@ -6,6 +6,7 @@ const positionSelect = document.getElementById("position-select");
 const positionGroup = document.getElementById("position-group");
 const employeePositionInput = document.getElementById("employee-position");
 const employeeIdGroup = document.getElementById("employee-id-group");
+const eSignatureGroup = document.getElementById("e-signature-group");
 
 if (isEmployeeCheckbox && positionModal) {
   // Open modal when checkbox is checked
@@ -16,6 +17,7 @@ if (isEmployeeCheckbox && positionModal) {
       // Hide fields if unchecked
       positionGroup.style.display = "none";
       employeeIdGroup.style.display = "none";
+      eSignatureGroup.style.display = "none";
       employeePositionInput.value = "";
     }
   });
@@ -27,6 +29,7 @@ if (isEmployeeCheckbox && positionModal) {
       employeePositionInput.value = selectedValue;
       positionGroup.style.display = "block";
       employeeIdGroup.style.display = "block";
+      eSignatureGroup.style.display = "block";
       positionModal.classList.remove("visible");
     } else {
       alert("Please select a position.");

@@ -28,7 +28,7 @@ body {
 
 /* --- Sidebar Styling --- */
 .sidebar {
-  width: 220px; /* A bit wider for better text fit */
+  width: 220px;
   background-color: var(--primary-color);
   border-right: 1px solid #1a2c4f;
   display: flex;

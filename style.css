@@ -24,9 +24,15 @@ body.login-page {
 }
 
 @keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes inputGlow {
@@ -53,12 +59,7 @@ body.login-page {
   transition: transform 0.2s ease;
 }
 
-.login-card:hover {
-  transform: scale(1.01);
-  box-shadow: 0 35px 55px -18px rgba(20, 60, 120, 0.3);
-}
-
-h2 {
+.login h2 {
   font-size: 2.1rem;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -101,7 +102,7 @@ input {
   padding: 0.9rem 1.2rem;
   font-size: 1rem;
   background: #ffffff;
-  border: 1.5px solid #d4e0e9;
+  border: 1.5px solid rgba(0, 0, 0, 0.295);
   border-radius: 40px;
   outline: none;
   transition: all 0.2s;
@@ -316,7 +317,7 @@ input::placeholder {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background-color: #2f4b68;
   color: white;
 }
 

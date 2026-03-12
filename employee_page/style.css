@@ -58,18 +58,6 @@
   cursor: pointer;
 }
 
-.top-bar-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: "Poppins", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--primary-color);
-  letter-spacing: 0.5px;
-  white-space: nowrap; /* Prevent wrapping on smaller screens */
-}
-
 .header-logo {
   margin-left: auto;
   height: 50px;
@@ -163,8 +151,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .main-content {
@@ -375,7 +369,10 @@ table tbody tr:hover {
   display: flex;
   align-items: center;
   border: 1px solid var(--border-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .card:hover {
@@ -395,7 +392,9 @@ table tbody tr:hover {
   margin-right: 15px;
   background-color: rgba(32, 56, 100, 0.1); /* Primary color light */
   color: var(--primary-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card:hover .card-icon {
@@ -509,19 +508,19 @@ table tbody tr:hover {
   }
 
   body.sidebar-collapsed .sidebar-header .sidebar-title {
-      display: block;
+    display: block;
   }
 
   /* Add a dark overlay when menu is open */
   body.sidebar-collapsed::after {
-      content: '';
-      position: fixed;
-      top: 70px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 999;
+    content: "";
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
   }
 }
 

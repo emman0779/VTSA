@@ -6,13 +6,13 @@
   <title>Modern login form · demo</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
+<body class="login-page">
 
 <div class="login-card">
   <h2>Welcome Back</h2>
   <div class="sub-head">Sign in to your account</div>
 
-  <form onsubmit="event.preventDefault(); alert('login would be verified here.');">
+  <form onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
     <div class="form-group">
       <label for="email">Email address</label>
       <input type="email" id="email" name="email" placeholder="marcia@example.com" required>
@@ -34,7 +34,7 @@
     <button type="submit" class="login-btn">Sign in</button>
 
     <div class="signup-message">
-      Don’t have an account? <a href="#" onclick="alert('📝 (demo) redirect to sign-up page.'); return false;">Create account</a>
+      Don’t have an account? <a href="register.html">Create account</a>
     </div>
   </form>
 </div>

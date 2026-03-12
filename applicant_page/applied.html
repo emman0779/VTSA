@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Link to the new specific CSS file -->
+    <link rel="stylesheet" href="applied.css" />
+    <!-- Font Awesome Link for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>Applied</title>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">
+          <img src="../applicant_page/images/vtsa_white.png" alt="VTSA Logo" />
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html"
+              ><i class="fas fa-home"></i> <span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="applied.html" class="active"
+              ><i class="fas fa-check-square"></i> <span>Applied</span></a
+            >
+          </li>
+          <li>
+            <a href="status.html"
+              ><i class="fas fa-tasks"></i> <span>Status</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><i class="fas fa-user"></i> <span>Profile</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <ul>
+          <li>
+            <a href="login.html"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="page-header">
+        <h1>My Applications</h1>
+        <p>Track the status of your job applications</p>
+      </header>
+
+      <div class="applications-grid">
+        <!-- Card 1: Pending -->
+        <div class="job-card">
+          <div class="card-header">
+            <div>
+              <h3 class="role-title">Test and Commissioning Technician</h3>
+              <p class="company-name">VTSA International Inc.</p>
+            </div>
+            <span class="status-badge status-pending">Pending</span>
+          </div>
+          <div class="card-details">
+            <div class="detail-row">
+              <i class="far fa-calendar-alt"></i>
+              <span>Applied: March 10, 2026</span>
+            </div>
+            <div class="detail-row">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Pasig City</span>
+            </div>
+          </div>
+          <a href="#" class="view-btn">View Details</a>
+        </div>
+
+        <!-- Card 2: Interview -->
+        <div class="job-card">
+          <div class="card-header">
+            <div>
+              <h3 class="role-title">Admin Staff</h3>
+              <p class="company-name">VTSA International Inc.</p>
+            </div>
+            <span class="status-badge status-interview">Interview</span>
+          </div>
+          <div class="card-details">
+            <div class="detail-row">
+              <i class="far fa-calendar-alt"></i>
+              <span>Applied: Feb 28, 2026</span>
+            </div>
+            <div class="detail-row">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Quezon City</span>
+            </div>
+          </div>
+          <a href="#" class="view-btn">View Details</a>
+        </div>
+
+        <!-- Card 3: Rejected -->
+        <div class="job-card">
+          <div class="card-header">
+            <div>
+              <h3 class="role-title">Digital Marketing Officer</h3>
+              <p class="company-name">Schneider Lifts</p>
+            </div>
+            <span class="status-badge status-rejected">Rejected</span>
+          </div>
+          <div class="card-details">
+            <div class="detail-row">
+              <i class="far fa-calendar-alt"></i>
+              <span>Applied: Jan 15, 2026</span>
+            </div>
+            <div class="detail-row">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Makati City</span>
+            </div>
+          </div>
+          <a href="#" class="view-btn">View Details</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

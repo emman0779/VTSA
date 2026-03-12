@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VTSA System</title>
+    <link rel="stylesheet" href="style.css"> <!-- Shared employee styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">
+                <img src="../applicant_page/images/vtsa_white.png" alt="VTSA Logo">
+            </a>
+            <div class="sidebar-title">Admin Panel</div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="#applicants" class="nav-link"><i class="fas fa-users"></i> <span>Applicants</span></a></li>
+                <li><a href="#employees" class="nav-link"><i class="fas fa-user-tie"></i> <span>Updated Employees Record</span></a></li>
+                <li><a href="#jobs" class="nav-link"><i class="fas fa-briefcase"></i> <span>Job Listings</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <ul>
+                <li><a href="../employee_page/login.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </div>
+    </aside>
+    <div class="main-container">
+        <header class="top-bar">
+            <button id="sidebar-toggle" class="sidebar-toggle-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top-bar-title">VTSA Management System</div>
+        </header>
+        <main class="main-content">
+            <!-- Dashboard Overview Section -->
+            <section id="dashboard" class="dashboard-section active-section">
+                <h1>Dashboard Overview</h1>
+                <div class="stats-cards">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <div class="card-info">
+                            <h4>Total Applicants</h4>
+                            <p>125</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="card-info">
+                            <h4>Open Positions</h4>
+                            <p>6</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-plus"></i></div>
+                        <div class="card-info">
+                            <h4>New Hires (Month)</h4>
+                            <p>4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <canvas id="applicantChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="jobChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Applicants Management Section -->
+            <section id="applicants" class="dashboard-section">
+                <h1>Manage Applicants</h1>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Applied For</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>john.doe@example.com</td>
+                                <td>Test and Commissioning Technician</td>
+                                <td><span class="status-pill status-pending">Pending</span></td>
+                                <td>
+                                    <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@example.com</td>
+                                <td>Admin Staff</td>
+                                <td><span class="status-pill status-hired">Hired</span></td>
+                                <td>
+                                    <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Employees Management Section -->
+            <section id="employees" class="dashboard-section">
+                <h1>Manage Employees</h1>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Work Email</th>
+                                <th>Contact Number</th>
+                                <th>Civil Status</th>
+                                <th>Date of Birth</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- This row represents an employee who has filled out their personnel record -->
+                            <tr>
+                                <td>Brady, Marcia</td>
+                                <td>marcia@vtsa.com</td>
+                                <td>09171234567</td>
+                                <td>Single</td>
+                                <td>1990-05-15</td>
+                                <td>2023-10-26 09:45 AM</td>
+                                <td>
+                                    <button class="action-btn view-btn" title="View Full Record"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn delete-btn" title="Delete Record"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Add more employee rows here as they update their info -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Job Listings Management Section -->
+            <section id="jobs" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Manage Job Listings</h1>
+                    <button class="btn btn-primary add-new-btn"><i class="fas fa-plus"></i> Add New Job</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Status</th>
+                                <th>Applicants</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Test and Commissioning Technician</td>
+                                <td><span class="status-pill status-open">Open</span></td>
+                                <td>25</td>
+                                <td>
+                                    <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PMS Technician</td>
+                                <td><span class="status-pill status-open">Open</span></td>
+                                <td>18</td>
+                                <td>
+                                    <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>Sales & Marketing Officer</td>
+                                <td><span class="status-pill status-closed">Closed</span></td>
+                                <td>32</td>
+                                <td>
+                                    <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -39,34 +39,3 @@ if (isEmployeeCheckbox && positionModal) {
     isEmployeeCheckbox.checked = false; // Uncheck since they cancelled
   });
 }
-
-// --- Admin Export Modal Logic ---
-const exportBtn = document.getElementById("export-btn");
-const exportModal = document.getElementById("export-modal");
-const confirmExportBtn = document.getElementById("confirm-export");
-const cancelExportBtn = document.getElementById("cancel-export");
-const exportFormatSelect = document.getElementById("export-format");
-
-if (exportBtn && exportModal) {
-  exportBtn.addEventListener("click", function () {
-    exportModal.classList.add("visible");
-  });
-
-  // Handle Confirm
-  confirmExportBtn.addEventListener("click", function () {
-    const format = exportFormatSelect.value;
-    if (format) {
-      alert("Exporting file as " + format + "..."); // Placeholder for actual export logic
-      exportModal.classList.remove("visible");
-      exportFormatSelect.value = ""; // Reset selection
-    } else {
-      alert("Please select a file format.");
-    }
-  });
-
-  // Handle Cancel
-  cancelExportBtn.addEventListener("click", function () {
-    exportModal.classList.remove("visible");
-    exportFormatSelect.value = ""; // Reset selection
-  });
-}

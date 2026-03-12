@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to handle section switching
   const showSection = (hash) => {
+    if (sections.length === 0) return;
+
     // Default to #dashboard if hash is empty or invalid
     let sectionId = hash ? hash.substring(1) : "dashboard";
     let sectionFound = false;
@@ -49,11 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle clicks on nav links
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      e.preventDefault();
       const hash = this.getAttribute("href");
-      // Update URL hash for bookmarking/history
-      window.location.hash = hash;
-      showSection(hash);
+      if (hash && hash.startsWith("#")) {
+        e.preventDefault();
+        window.location.hash = hash;
+        showSection(hash);
+      }
     });
   });
 
@@ -180,5 +183,62 @@ document.addEventListener("DOMContentLoaded", function () {
       exportModal.classList.remove("visible");
       exportFormatSelect.value = ""; // Reset selection
     });
+  }
+
+  // --- Registration Position Modal Logic ---
+  const isEmployeeCheckbox = document.getElementById("is-employee");
+  const positionModal = document.getElementById("position-modal");
+  const confirmPositionBtn = document.getElementById("confirm-position");
+  const cancelPositionBtn = document.getElementById("cancel-position");
+  const positionSelect = document.getElementById("position-select");
+  const positionGroup = document.getElementById("position-group");
+  const employeeIdGroup = document.getElementById("employee-id-group");
+  const employeePositionInput = document.getElementById("employee-position");
+
+  if (isEmployeeCheckbox && positionModal) {
+    isEmployeeCheckbox.addEventListener("change", function () {
+      if (this.checked) {
+        positionModal.classList.add("visible");
+      } else {
+        positionGroup.style.display = "none";
+        employeeIdGroup.style.display = "none";
+        employeePositionInput.value = "";
+      }
+    });
+
+    confirmPositionBtn.addEventListener("click", function () {
+      if (positionSelect.value) {
+        employeePositionInput.value = positionSelect.value;
+        positionGroup.style.display = "block";
+        employeeIdGroup.style.display = "block";
+        positionModal.classList.remove("visible");
+      } else {
+        alert("Please select a position.");
+      }
+    });
+
+    cancelPositionBtn.addEventListener("click", function () {
+      positionModal.classList.remove("visible");
+      isEmployeeCheckbox.checked = false;
+      positionSelect.value = "";
+    });
+  }
+
+  // --- Employee Update Modal Logic ---
+  const openUpdateModalBtn = document.getElementById("open-update-modal");
+  const updateModal = document.getElementById("update-modal");
+  const closeUpdateModalBtn = document.getElementById("close-update-modal");
+  const cancelUpdateBtn = document.getElementById("cancel-update");
+
+  if (openUpdateModalBtn && updateModal) {
+    openUpdateModalBtn.addEventListener("click", function () {
+      updateModal.classList.add("visible");
+    });
+    const closeModal = () => {
+        updateModal.classList.remove("visible");
+    };
+
+    if (closeUpdateModalBtn) closeUpdateModalBtn.addEventListener("click", closeModal);
+    if (cancelUpdateBtn) cancelUpdateBtn.addEventListener("click", closeModal);
   }
 });

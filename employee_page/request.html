@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Supplies - Employee Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="dashboard-page">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="employee_dashboard.html" class="logo">
+          <img src="../applicant_page/images/vtsa_white.png" alt="VTSA Logo" />
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="employee_dashboard.html#profile" class="nav-link"
+              ><i class="fas fa-user-edit"></i>
+              <span>Employee Information</span></a
+            >
+          </li>
+          <li>
+            <a href="request.html" class="nav-link active"
+              ><i class="fas fa-box-open"></i> <span>Request Supplies</span></a
+            >
+          </li>
+          <li>
+            <a href="conference_schedule.html" class="nav-link"
+              ><i class="fas fa-calendar-alt"></i>
+              <span>Conference Schedule</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <ul>
+          <li>
+            <a href="login.html"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="main-container">
+      <header class="top-bar">
+        <button id="sidebar-toggle" class="sidebar-toggle-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="top-bar-title">Request Office Supplies</div>
+      </header>
+      <main class="main-content">
+        <div class="profile-info-wrapper">
+          <form
+            onsubmit="
+              event.preventDefault();
+              alert('Request submitted successfully!');
+            "
+          >
+            <div class="form-group">
+              <label for="item_name">Item Name</label>
+              <input
+                type="text"
+                id="item_name"
+                name="item_name"
+                placeholder="e.g. Bond Paper, Ballpen"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                value="1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="priority">Priority Level</label>
+              <select id="priority" name="priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="reason">Reason / Description</label>
+              <textarea
+                id="reason"
+                name="reason"
+                rows="4"
+                placeholder="Briefly describe why these supplies are needed..."
+              ></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Submit Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

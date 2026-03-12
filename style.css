@@ -14,11 +14,28 @@
 
 body.login-page {
   min-height: 100vh;
-  background: linear-gradient(145deg, #f6f9fc 0%, #e9f0f5 100%);
+  background: linear-gradient(-45deg, #f6f9fc, #e9f0f5, #cfd9df, #e2ebf0);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes inputGlow {
+  from {
+    box-shadow: 0 0 8px rgba(61, 126, 185, 0.2);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(61, 126, 185, 0.4);
+  }
 }
 
 .login-card {
@@ -65,9 +82,10 @@ h2 {
 }
 
 input:focus {
-  border-color: #3d7eb9;
-  box-shadow: 0 0 0 4px rgba(61, 126, 185, 0.15);
+  border-color: #4a90e2;
   background: #ffffff;
+  transform: scale(1.02);
+  animation: inputGlow 1.5s infinite alternate;
 }
 
 label {
@@ -88,12 +106,6 @@ input {
   outline: none;
   transition: all 0.2s;
   color: #102a3c;
-}
-
-input:focus {
-  border-color: #3d7eb9;
-  box-shadow: 0 0 0 4px rgba(61, 126, 185, 0.15);
-  background: #ffffff;
 }
 
 input::placeholder {
@@ -144,6 +156,21 @@ input::placeholder {
   border-bottom: 1px solid #184472;
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 8px 16px -6px rgba(25, 70, 120, 0.3);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px -8px rgba(25, 70, 120, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 16px -6px rgba(25, 70, 120, 0.3);
+  }
+}
+
 .login-btn {
   width: 100%;
   padding: 0.95rem;
@@ -158,12 +185,14 @@ input::placeholder {
   box-shadow: 0 8px 16px -6px rgba(25, 70, 120, 0.3);
   letter-spacing: 0.3px;
   margin-bottom: 1.8rem;
+  animation: pulse 2.5s infinite;
 }
 
 .login-btn:hover {
   background: #0f3b5e;
   transform: translateY(-2px);
   box-shadow: 0 12px 20px -8px #1a4970;
+  animation: none;
 }
 
 .login-btn:active {
@@ -204,6 +233,7 @@ input::placeholder {
   --danger-color: #dc3545;
 }
 
+/* --- Modal Styles --- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -247,17 +277,19 @@ input::placeholder {
   margin-top: 1.5rem;
 }
 
-/* --- Notification Modal Specifics --- */
-.notification-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
+.btn {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
 }
-.notification-success {
-  color: var(--success-color);
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
 }
-.notification-error {
-  color: var(--danger-color);
-}
-.notification-info {
-  color: var(--primary-color);
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
 }

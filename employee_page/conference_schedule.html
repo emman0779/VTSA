@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conference Hall Schedule - Employee Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="dashboard-page">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="employee_dashboard.html" class="logo">
+          <img src="../applicant_page/images/vtsa_white.png" alt="VTSA Logo" />
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="employee_dashboard.html#profile" class="nav-link"
+              ><i class="fas fa-user-edit"></i>
+              <span>Update Information</span></a
+            >
+          </li>
+          <li>
+            <a href="request.html" class="nav-link"
+              ><i class="fas fa-box-open"></i> <span>Request Supplies</span></a
+            >
+          </li>
+          <li>
+            <a href="conference_schedule.html" class="nav-link active"
+              ><i class="fas fa-calendar-alt"></i>
+              <span>Conference Schedule</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <ul>
+          <li>
+            <a href="login.html"
+              ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="main-container">
+      <header class="top-bar">
+        <button id="sidebar-toggle" class="sidebar-toggle-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="top-bar-title">Conference Hall Schedule</div>
+      </header>
+      <main class="main-content">
+        <div class="profile-info-wrapper">
+          <h1 class="centered-header">Book Conference Hall</h1>
+          <p class="centered-header-description">
+            Check availability and schedule your meeting.
+          </p>
+
+          <form
+            onsubmit="
+              event.preventDefault();
+              alert('Booking request submitted to Admin!');
+            "
+          >
+            <div class="form-group">
+              <label for="department_name">Department Name</label>
+              <input
+                type="text"
+                id="department_name"
+                name="department_name"
+                placeholder="e.g. John Doe"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="booking_date">Date</label>
+              <input
+                type="date"
+                id="booking_date"
+                name="booking_date"
+                required
+              />
+            </div>
+            <div style="display: flex; gap: 15px">
+              <div class="form-group" style="flex: 1">
+                <label for="start_time">Start Time</label>
+                <input type="time" id="start_time" name="start_time" required />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label for="end_time">End Time</label>
+                <input type="time" id="end_time" name="end_time" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Submit Booking
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

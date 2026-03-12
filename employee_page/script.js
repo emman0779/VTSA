@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to handle section switching
   const showSection = (hash) => {
+    if (sections.length === 0) return;
+
     // Default to #dashboard if hash is empty or invalid
     let sectionId = hash ? hash.substring(1) : "dashboard";
     let sectionFound = false;
@@ -49,11 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle clicks on nav links
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      e.preventDefault();
       const hash = this.getAttribute("href");
-      // Update URL hash for bookmarking/history
-      window.location.hash = hash;
-      showSection(hash);
+      if (hash && hash.startsWith("#")) {
+        e.preventDefault();
+        window.location.hash = hash;
+        showSection(hash);
+      }
     });
   });
 

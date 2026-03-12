@@ -40,6 +40,11 @@
       </div>
     </div>
 
+    <div class="form-group" id="position-group" style="display: none;">
+      <label for="employee-position">Position</label>
+      <input type="text" id="employee-position" name="employee-position" readonly>
+    </div>
+
     <div class="form-group" id="employee-id-group" style="display: none;">
       <label for="employee-id">Employee ID</label>
       <input type="text" id="employee-id" name="employee-id" placeholder="e.g., 12345">
@@ -52,6 +57,27 @@
     </div>
   </form>
 </div>
+
+<!-- Position Selection Modal -->
+<div id="position-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Select Your Position</h3>
+    <div class="form-group">
+        <select id="position-select" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="">-- Select Position --</option>
+            <option value="Admin Staff">Admin Staff</option>
+            <option value="Technician">Technician</option>
+            <option value="Manager">Manager</option>
+            <option value="Sales Officer">Sales Officer</option>
+        </select>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="confirm-position" class="btn btn-primary" style="padding: 8px 20px;">Confirm</button>
+      <button type="button" id="cancel-position" class="btn btn-secondary" style="padding: 8px 20px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>

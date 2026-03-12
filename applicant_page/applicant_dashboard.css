@@ -1,0 +1,468 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary-color: #203864;
+  --secondary-color: #f8f9fa;
+  --text-color: #333;
+  --border-color: #e0e0e0;
+  --success-green: #2ecc71;
+  --pending-yellow: #f1c40f;
+  --interview-blue: #3498db;
+  --rejected-red: #e74c3c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- Sidebar Styling --- */
+.sidebar {
+  width: 220px; /* A bit wider for better text fit */
+  background-color: var(--primary-color);
+  border-right: 1px solid #1a2c4f;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.sidebar-header .logo img {
+  height: 45px;
+  display: inline-block;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.sidebar-nav ul,
+.sidebar-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav ul {
+  padding-top: 1rem;
+}
+
+.sidebar-nav li a,
+.sidebar-footer li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar-nav li a i,
+.sidebar-footer li a i {
+  margin-right: 15px;
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar-nav li a:hover,
+.sidebar-nav li a.active {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-right: 3px solid #ffffff;
+}
+
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 0;
+}
+
+.sidebar-footer li a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* --- Main Content Styling --- */
+.main-content {
+  flex-grow: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Hide sections by default */
+.dashboard-section {
+  display: none;
+}
+.dashboard-section.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- STYLES FROM applied.css --- */
+.applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.job-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.role-title {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+.company-name {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+.status-pending {
+  background-color: var(--pending-yellow);
+}
+.status-interview {
+  background-color: var(--interview-blue);
+}
+.status-rejected {
+  background-color: var(--rejected-red);
+}
+.card-details {
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #777;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.view-btn {
+  align-self: flex-start;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* --- STYLES FROM status.css --- */
+.status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.status-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.application-id {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+.action-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.action-btn:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+.progress-track {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+.progress-track::before {
+  content: "";
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+.step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+.step-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  border: 4px solid #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  color: #999;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+}
+.step p {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #777;
+}
+.step .date {
+  font-size: 0.75rem;
+  color: #999;
+}
+.step.completed .step-icon {
+  border-color: var(--success-green);
+  background-color: var(--success-green);
+  color: white;
+}
+.step.active .step-icon {
+  border-color: var(--primary-color);
+  background-color: #fff;
+  color: var(--primary-color);
+}
+.step.active p {
+  color: var(--primary-color);
+}
+.step.completed p {
+  color: var(--success-green);
+}
+.activity-log {
+  background-color: #f9f9f9;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+.activity-log h4 {
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  color: var(--primary-color);
+}
+.log-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* --- STYLES FROM profile.css --- */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.profile-header-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.profile-img-container {
+  position: relative;
+}
+.profile-img-container img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.profile-info h2 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+.contact-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+.update-btn {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.profile-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.section-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1rem;
+}
+.section-header h3 {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.skill-badge {
+  background-color: #eef2f7;
+  color: var(--primary-color);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.resume-upload-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.current-resume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.upload-btn {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.upload-note {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* --- Styles for Experience & Education Items --- */
+.experience-item {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.experience-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.experience-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.experience-item .item-meta {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.experience-item p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.6;
+}

@@ -33,9 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (document.getElementById("dashboard")) {
         document.getElementById("dashboard").classList.add("active-section");
       } else if (sections.length > 0) {
-        // Fallback: Show the first section (e.g. for employee page with #profile)
+        // Fallback: Show the first section
         sections[0].classList.add("active-section");
-        sectionId = sections[0].id; // Update ID so nav highlights correctly
+        sectionId = sections[0].id;
       }
     }
 
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Listen for hash changes (activates navigation from non-sidebar buttons)
+  // Listen for hash changes
   window.addEventListener("hashchange", function () {
     showSection(window.location.hash);
   });
@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const applicantCtx = document.getElementById("applicantChart");
   const jobCtx = document.getElementById("jobChart");
 
-  // Only initialize if the elements exist (to avoid errors on other pages)
   if (applicantCtx && jobCtx) {
     // Chart 1: Applicants vs Hires Trend (Line Chart)
     new Chart(applicantCtx, {
@@ -135,63 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // --- Supplies Overview Chart ---
-  const suppliesCtx = document.getElementById("suppliesChart");
-  if (suppliesCtx) {
-    new Chart(suppliesCtx, {
-      type: "pie",
-      data: {
-        labels: ["Requested Supplies (Month)", "Remaining Supplies"],
-        datasets: [
-          {
-            label: "Count",
-            data: [42, 1458], // Mock data: 42 requested, 1458 remaining
-            backgroundColor: [
-              "rgba(255, 193, 7, 0.8)", // Warning Color for requests
-              "rgba(40, 167, 69, 0.8)", // Success Color for remaining
-            ],
-            borderColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"],
-            borderWidth: 2,
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "top",
-          },
-          title: {
-            display: true,
-            text: "Monthly Supply Usage Overview",
-            font: { size: 16 },
-          },
-        },
-      },
-    });
-  }
-
-  // --- Employee Form Logic (Address) ---
-  const radioYes = document.getElementById("is_permanent_yes");
-  const radioNo = document.getElementById("is_permanent_no");
-  const currentAddressGroup = document.getElementById("current_address_group");
-
-  // Check if these elements exist on the page to avoid errors on other pages
-  if (radioYes && radioNo && currentAddressGroup) {
-    const handleAddressRadioChange = () => {
-      if (radioNo.checked) {
-        currentAddressGroup.style.display = "block";
-      } else {
-        currentAddressGroup.style.display = "none";
-      }
-    };
-
-    radioYes.addEventListener("change", handleAddressRadioChange);
-    radioNo.addEventListener("change", handleAddressRadioChange);
-  }
-
   // --- Admin Export Modal Logic ---
   const exportBtn = document.getElementById("export-btn");
   const exportModal = document.getElementById("export-modal");
@@ -200,64 +142,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const exportFormatSelect = document.getElementById("export-format");
 
   if (exportBtn && exportModal) {
-    exportBtn.addEventListener("click", function () {
-      exportModal.classList.add("visible");
-    });
-
-    // Handle Confirm
-    confirmExportBtn.addEventListener("click", function () {
+    exportBtn.addEventListener("click", () =>
+      exportModal.classList.add("visible"),
+    );
+    confirmExportBtn.addEventListener("click", () => {
       const format = exportFormatSelect.value;
       if (format) {
-        alert("Exporting file as " + format + "..."); // Placeholder for actual export logic
+        alert(`Exporting file as ${format}...`); // Placeholder
         exportModal.classList.remove("visible");
-        exportFormatSelect.value = ""; // Reset selection
+        exportFormatSelect.value = "";
       } else {
         alert("Please select a file format.");
       }
     });
-
-    // Handle Cancel
-    cancelExportBtn.addEventListener("click", function () {
+    cancelExportBtn.addEventListener("click", () => {
       exportModal.classList.remove("visible");
-      exportFormatSelect.value = ""; // Reset selection
+      exportFormatSelect.value = "";
     });
-  }
-
-  // --- Request Page Form Toggle ---
-  const requestTypeSelect = document.getElementById("request_type_select");
-  const bondPaperForm = document.getElementById("bond_paper_form_container");
-  const otherSuppliesForm = document.getElementById(
-    "other_supplies_form_container",
-  );
-
-  if (requestTypeSelect && bondPaperForm && otherSuppliesForm) {
-    requestTypeSelect.addEventListener("change", function () {
-      if (this.value === "bond_paper") {
-        bondPaperForm.style.display = "block";
-        otherSuppliesForm.style.display = "none";
-      } else if (this.value === "other_supplies") {
-        bondPaperForm.style.display = "none";
-        otherSuppliesForm.style.display = "block";
-      }
-    });
-  }
-
-  // --- Employee Update Modal Logic ---
-  const openUpdateModalBtn = document.getElementById("open-update-modal");
-  const updateModal = document.getElementById("update-modal");
-  const closeUpdateModalBtn = document.getElementById("close-update-modal");
-  const cancelUpdateBtn = document.getElementById("cancel-update");
-
-  if (openUpdateModalBtn && updateModal) {
-    openUpdateModalBtn.addEventListener("click", function () {
-      updateModal.classList.add("visible");
-    });
-    const closeModal = () => {
-      updateModal.classList.remove("visible");
-    };
-
-    if (closeUpdateModalBtn)
-      closeUpdateModalBtn.addEventListener("click", closeModal);
-    if (cancelUpdateBtn) cancelUpdateBtn.addEventListener("click", closeModal);
   }
 });

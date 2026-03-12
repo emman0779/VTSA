@@ -9,13 +9,13 @@
 }
 
 body {
-  background-color: #f8f9fa; /* A light grey background for a softer look */
+  background-color: white;
   color: #333;
 }
 
 /* --- Navigation Bar --- */
 .header {
-  background-color: #ffffff;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 0 5%;
 }
@@ -100,24 +100,6 @@ body {
   width: 100%;
 }
 
-/* --- Animations --- */
-@keyframes techGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translate3d(0, 30px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
 /* --- Hero Section --- */
 .hero {
   display: flex;
@@ -125,7 +107,6 @@ body {
   justify-content: space-between;
   padding: 2rem;
   min-height: calc(100vh - 80px);
-  background: linear-gradient(-45deg, #ffffff, #f0f4f8, #e6eef5, #ffffff);
   background-size: 400% 400%;
   animation: techGradient 15s ease infinite;
   position: relative;
@@ -148,27 +129,23 @@ aside {
   position: absolute;
   top: -80px;
   right: 0;
-  animation: float 6s ease-in-out infinite;
 }
 
 aside h3 {
   color: #203864;
   font-weight: 900;
-  animation: fadeInUp 0.8s ease-out both;
 }
 
 aside h1 {
   font-size: 3.5rem;
   line-height: 1.2; /* Improved line spacing */
   margin: 0.5rem 0 1rem 0;
-  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 aside p {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 1.5rem;
-  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 aside .hero-apply-button {
@@ -188,7 +165,6 @@ aside .hero-apply-button {
     background-color 0.3s ease,
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s ease-out 0.6s both;
 }
 
 aside .hero-apply-button:hover {
@@ -237,9 +213,15 @@ main {
 }
 
 /* Staggered animation for the first few cards */
-.jobCards:nth-child(2) { animation-delay: 0.1s; }
-.jobCards:nth-child(3) { animation-delay: 0.2s; }
-.jobCards:nth-child(4) { animation-delay: 0.3s; }
+.jobCards:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.jobCards:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.jobCards:nth-child(4) {
+  animation-delay: 0.3s;
+}
 
 .jobCards h4 {
   font-size: 1.25rem;
@@ -504,7 +486,7 @@ main {
     max-width: 80%;
     margin-bottom: 2rem;
   }
-  
+
   aside h1 {
     font-size: 2.5rem;
   }

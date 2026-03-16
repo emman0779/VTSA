@@ -59,7 +59,8 @@ body.login-page {
   transition: transform 0.2s ease;
 }
 
-.login-card h2, .sub-head {
+.login-card h2,
+.sub-head {
   text-align: center;
 }
 

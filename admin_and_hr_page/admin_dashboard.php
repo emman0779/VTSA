@@ -244,14 +244,27 @@ usort($allRequests, function($a, $b) {
                       <td><?php echo htmlspecialchars($booking['department']); ?></td>
                       <td><?php echo htmlspecialchars($booking['employee_name']); ?></td>
                       <td>
-                        <span class="status-pill <?php echo strtolower($booking['status']) === 'pending' ? 'status-pending' : 'status-hired'; ?>">
-                          <?php echo htmlspecialchars($booking['status']); ?>
-                        </span>
+                        <?php 
+                          $statusClass = 'status-pending';
+                          $s = strtolower($booking['status']);
+                          if ($s === 'approved') $statusClass = 'status-hired';
+                          elseif ($s === 'rejected' || $s === 'cancelled') $statusClass = 'status-closed';
+                        ?>
+                        <span class="status-pill <?php echo $statusClass; ?>"><?php echo htmlspecialchars($booking['status']); ?></span>
                       </td>
                       <td>
-                        <button class="action-btn delete-btn">
-                          <i class="fas fa-times"></i>
-                        </button>
+                        <form action="../update_request_status.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="req_id" value="<?php echo $booking['id']; ?>">
+                            <input type="hidden" name="req_type" value="Conference Booking">
+                            <input type="hidden" name="status" value="Approved">
+                            <button type="submit" class="action-btn view-btn" title="Approve"><i class="fas fa-check"></i></button>
+                        </form>
+                        <form action="../update_request_status.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="req_id" value="<?php echo $booking['id']; ?>">
+                            <input type="hidden" name="req_type" value="Conference Booking">
+                            <input type="hidden" name="status" value="Rejected">
+                            <button type="submit" class="action-btn delete-btn" title="Reject"><i class="fas fa-times"></i></button>
+                        </form>
                       </td>
                     </tr>
                   <?php endforeach; ?>

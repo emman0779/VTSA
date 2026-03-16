@@ -23,12 +23,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = $_POST['req_type'];
     $status = $_POST['status'];
 
+    $anchor = "requests";
     // Determine which table to update based on the request type
     $table = "";
     if ($type === 'Bond Paper') {
         $table = "request_bpaper";
     } elseif ($type === 'Other Supplies') {
         $table = "request_supplies";
+    } elseif ($type === 'Conference Booking') {
+        $table = "conference_bookings";
+        $anchor = "conference";
     }
 
     if ($table && $id && $status) {
@@ -41,6 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 // Redirect back to the admin dashboard
-header("Location: admin_and_hr_page/admin_dashboard.php#requests");
+header("Location: admin_and_hr_page/admin_dashboard.php#" . $anchor);
 exit();
 ?>

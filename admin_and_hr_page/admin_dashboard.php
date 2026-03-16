@@ -1,10 +1,19 @@
+<?php
+session_start();
+
+// Check if user is logged in and is an Admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    header("Location: ../index.html");
+    exit();
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - VTSA System</title>
-    <link rel="stylesheet" href="admin_style.css" />
+    <link rel="stylesheet" href="hr_dashboard.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -42,7 +51,7 @@
       <div class="sidebar-footer">
         <ul>
           <li>
-            <a href="../employee_page/login.html"
+            <a href="logout.php"
               ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
             >
           </li>
@@ -198,6 +207,6 @@
         </section>
       </main>
     </div>
-    <script src="../admin_and_hr_page/admin_dashboard.js"></script>
+    <script src="admin_dashboard.js"></script>
   </body>
 </html>

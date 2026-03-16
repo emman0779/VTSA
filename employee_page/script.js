@@ -260,4 +260,78 @@ document.addEventListener("DOMContentLoaded", function () {
       closeUpdateModalBtn.addEventListener("click", closeModal);
     if (cancelUpdateBtn) cancelUpdateBtn.addEventListener("click", closeModal);
   }
+
+  // --- Request History Modal ---
+  const viewRequestsBtn = document.getElementById("view-requests-btn");
+  const historyModal = document.getElementById("request-history-modal");
+  const closeHistoryModalBtn = document.getElementById("close-history-modal");
+  const historyContent = document.getElementById("request-history-content");
+
+  if (viewRequestsBtn && historyModal && historyContent) {
+    viewRequestsBtn.addEventListener("click", () => {
+      let tableHtml = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+      if (
+        typeof window.requestHistory !== "undefined" &&
+        window.requestHistory &&
+        window.requestHistory.length > 0
+      ) {
+        window.requestHistory.forEach((req) => {
+          const reqDate = new Date(req.date_time_requested).toLocaleString(
+            "en-US",
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+            },
+          );
+          const statusClass =
+            req.status.toLowerCase() === "pending"
+              ? "status-pending"
+              : "status-hired"; // Using hired for approved
+          tableHtml += `
+                        <tr>
+                            <td>${reqDate}</td>
+                            <td>${req.item}</td>
+                            <td>${req.quantity}</td>
+                            <td><span class="status-pill ${statusClass}">${req.status}</span></td>
+                        </tr>
+                    `;
+        });
+      } else {
+        tableHtml += `<tr><td colspan="4" style="text-align: center;">You have no past requests.</td></tr>`;
+      }
+
+      tableHtml += `</tbody></table>`;
+      historyContent.innerHTML = tableHtml;
+      // Force the modal to show by directly setting its style
+      historyModal.style.opacity = "1";
+      historyModal.style.visibility = "visible";
+    });
+
+    const closeHistoryModal = () => {
+      // Force the modal to hide
+      historyModal.style.opacity = "0";
+      historyModal.style.visibility = "hidden";
+    };
+    if (closeHistoryModalBtn) {
+      closeHistoryModalBtn.addEventListener("click", closeHistoryModal);
+    }
+    historyModal.addEventListener("click", (e) => {
+      if (e.target === historyModal) closeHistoryModal();
+    });
+  }
 });

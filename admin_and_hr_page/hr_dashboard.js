@@ -30,12 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If no section matches, show the dashboard
     if (!sectionFound) {
-      if (document.getElementById("dashboard")) {
-        document.getElementById("dashboard").classList.add("active-section");
-      } else if (sections.length > 0) {
-        // Fallback: Show the first section
-        sections[0].classList.add("active-section");
-        sectionId = sections[0].id;
+      const defaultSection = document.getElementById("dashboard");
+      if (defaultSection) {
+        defaultSection.classList.add("active-section");
+        sectionId = "dashboard"; // Update ID for nav highlighting
       }
     }
 
@@ -55,12 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (hash && hash.startsWith("#")) {
         e.preventDefault();
         window.location.hash = hash;
-        showSection(hash);
       }
     });
   });
 
-  // Listen for hash changes
+  // Listen for hash changes (activates navigation from non-sidebar buttons)
   window.addEventListener("hashchange", function () {
     showSection(window.location.hash);
   });
@@ -142,22 +139,92 @@ document.addEventListener("DOMContentLoaded", function () {
   const exportFormatSelect = document.getElementById("export-format");
 
   if (exportBtn && exportModal) {
-    exportBtn.addEventListener("click", () =>
-      exportModal.classList.add("visible"),
-    );
-    confirmExportBtn.addEventListener("click", () => {
+    exportBtn.addEventListener("click", function () {
+      exportModal.classList.add("visible");
+    });
+
+    // Handle Confirm
+    confirmExportBtn.addEventListener("click", function () {
       const format = exportFormatSelect.value;
       if (format) {
-        alert(`Exporting file as ${format}...`); // Placeholder
+        alert("Exporting file as ".concat(format, "...")); // Placeholder for actual export logic
         exportModal.classList.remove("visible");
-        exportFormatSelect.value = "";
+        exportFormatSelect.value = ""; // Reset selection
       } else {
         alert("Please select a file format.");
       }
     });
-    cancelExportBtn.addEventListener("click", () => {
+
+    // Handle Cancel
+    cancelExportBtn.addEventListener("click", function () {
       exportModal.classList.remove("visible");
-      exportFormatSelect.value = "";
+      exportFormatSelect.value = ""; // Reset selection
+    });
+  }
+
+  // --- Employee Details Modal Logic ---
+  const employeeModal = document.getElementById("employee-details-modal");
+  const closeEmployeeModalBtn = document.getElementById("close-employee-modal");
+  const employeeDetailsContent = document.getElementById(
+    "employee-details-content",
+  );
+  const modalEmployeeName = document.getElementById("modal-employee-name");
+
+  const viewEmployeeButtons = document.querySelectorAll("#employees .view-btn");
+
+  if (employeeModal && viewEmployeeButtons.length > 0) {
+    viewEmployeeButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const employeeId = this.dataset.id;
+        const employee = window.employeesData[employeeId];
+
+        if (employee) {
+          // Set modal title
+          modalEmployeeName.textContent = `Details for ${employee.name}`;
+
+          // Build the table content
+          const detailsHtml = `
+            <table style="table-layout: fixed;">
+                <tbody>
+                    <tr><th style="width: 35%;">Full Name</th><td>${employee.name || "N/A"}</td></tr>
+                    <tr><th>Employee ID</th><td>${employee.employee_id_number || "N/A"}</td></tr>
+                    <tr><th>Position</th><td>${employee.position || "N/A"}</td></tr>
+                    <tr><th>Personal Email</th><td>${employee.personal_email || "N/A"}</td></tr>
+                    <tr><th>Work Email</th><td>${employee.work_email || "N/A"}</td></tr>
+                    <tr><th>Personal Contact No.</th><td>${employee.personal_no || "N/A"}</td></tr>
+                    <tr><th>Date of Birth</th><td>${
+                      employee.date_of_birth
+                        ? new Date(employee.date_of_birth).toLocaleDateString(
+                            "en-US",
+                            { year: "numeric", month: "long", day: "numeric" },
+                          )
+                        : "N/A"
+                    }</td></tr>
+                    <tr><th>Gender</th><td>${employee.gender || "N/A"}</td></tr>
+                    <tr><th>Civil Status</th><td>${employee.civil_status || "N/A"}</td></tr>
+                    <tr><th>Permanent Address</th><td>${employee.permanent_address || "N/A"}</td></tr>
+                    <tr><th>Current Address</th><td>${employee.current_address || "N/A"}</td></tr>
+                    <tr><th>Emergency Contact Person</th><td>${employee.contact_person || "N/A"}</td></tr>
+                    <tr><th>Relationship</th><td>${employee.relationship || "N/A"}</td></tr>
+                    <tr><th>Emergency Contact No.</th><td>${employee.contact_number || "N/A"}</td></tr>
+                </tbody>
+            </table>
+        `;
+
+          employeeDetailsContent.innerHTML = detailsHtml;
+          employeeModal.classList.add("visible");
+        }
+      });
+    });
+
+    // Close modal functionality
+    const closeEmployeeModal = () => {
+      employeeModal.classList.remove("visible");
+    };
+
+    closeEmployeeModalBtn.addEventListener("click", closeEmployeeModal);
+    employeeModal.addEventListener("click", (event) => {
+      if (event.target === employeeModal) closeEmployeeModal();
     });
   }
 });

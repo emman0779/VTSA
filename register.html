@@ -11,13 +11,7 @@
       <h2>Create Account</h2>
       <div class="sub-head">Get started with your new account</div>
 
-      <form
-        onsubmit="
-          event.preventDefault();
-          alert('Registration successful! Please log in.');
-          window.location.href = 'login.html';
-        "
-      >
+      <form action="register.php" method="POST" enctype="multipart/form-data">
         <div class="form-group">
           <label for="fullname">Full Name</label>
           <input

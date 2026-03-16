@@ -1,4 +1,71 @@
-<!doctype html>
+<?php
+session_start();
+
+// Check if user is logged in and is an employee
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'employee') {
+    header("Location: ../index.html");
+    exit();
+}
+
+// --- Database Connection ---
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "vtsa_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch employee data
+$employee_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM employees WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $employee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$employee = $result->fetch_assoc();
+$stmt->close();
+
+// --- Fetch Request History ---
+$requests = [];
+// Get bond paper requests
+$sql_bpaper = "SELECT CONCAT(paper_size, ' Bond Paper') as item, quantity, status, date_time_requested FROM request_bpaper WHERE employee_id = ?";
+$stmt_bpaper = $conn->prepare($sql_bpaper);
+$stmt_bpaper->bind_param("i", $employee_id);
+$stmt_bpaper->execute();
+$result_bpaper = $stmt_bpaper->get_result();
+while ($row = $result_bpaper->fetch_assoc()) {
+    $requests[] = $row;
+}
+$stmt_bpaper->close();
+
+// Get other supply requests
+$sql_supplies = "SELECT item_name as item, quantity, status, date_time_requested FROM request_supplies WHERE employee_id = ?";
+$stmt_supplies = $conn->prepare($sql_supplies);
+$stmt_supplies->bind_param("i", $employee_id);
+$stmt_supplies->execute();
+$result_supplies = $stmt_supplies->get_result();
+while ($row = $result_supplies->fetch_assoc()) {
+    $requests[] = $row;
+}
+$stmt_supplies->close();
+
+// Sort requests by date, descending
+usort($requests, fn($a, $b) => strtotime($b['date_time_requested']) <=> strtotime($a['date_time_requested']));
+
+// Determine if there is an active pending request
+$hasPendingRequests = false;
+foreach ($requests as $req) {
+    if (isset($req['status']) && strtolower($req['status']) === 'pending') {
+        $hasPendingRequests = true;
+        break;
+    }
+}
+
+$conn->close();
+?><!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -42,7 +109,7 @@
       <div class="sidebar-footer">
         <ul>
           <li>
-            <a href="login.html"
+            <a href="logout.php"
               ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
             >
           </li>
@@ -88,14 +155,14 @@
                   Personal Information
                 </h3>
                 <p style="margin-bottom: 8px">
-                  <strong>Full Name:</strong> Dela Cruz, Juan
+                  <strong>Full Name:</strong> <?php echo htmlspecialchars($employee['name'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Civil Status:</strong> Single
+                  <strong>Civil Status:</strong> <?php echo htmlspecialchars($employee['civil_status'] ?? 'N/A'); ?>
                 </p>
-                <p style="margin-bottom: 8px"><strong>Gender:</strong> Male</p>
+                <p style="margin-bottom: 8px"><strong>Gender:</strong> <?php echo htmlspecialchars($employee['gender'] ?? 'N/A'); ?></p>
                 <p style="margin-bottom: 8px">
-                  <strong>Date of Birth:</strong> 1995-08-20
+                  <strong>Date of Birth:</strong> <?php echo htmlspecialchars($employee['date_of_birth'] ? date('F j, Y', strtotime($employee['date_of_birth'])) : 'N/A'); ?>
                 </p>
               </div>
               <div style="flex: 1">
@@ -110,13 +177,13 @@
                   Contact Information
                 </h3>
                 <p style="margin-bottom: 8px">
-                  <strong>Personal No.:</strong> 0917-123-4567
+                  <strong>Personal No.:</strong> <?php echo htmlspecialchars($employee['personal_no'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Work Email:</strong> juan.delacruz@vtsa.com
+                  <strong>Work Email:</strong> <?php echo htmlspecialchars($employee['work_email'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Personal Email:</strong> juandelacruz@gmail.com
+                  <strong>Personal Email:</strong> <?php echo htmlspecialchars($employee['personal_email'] ?? 'N/A'); ?>
                 </p>
               </div>
             </div>
@@ -137,11 +204,10 @@
                   Address
                 </h3>
                 <p style="margin-bottom: 8px">
-                  <strong>Permanent Address:</strong> Block 5 Lot 2, Camella
-                  Homes, Cavite
+                  <strong>Permanent Address:</strong> <?php echo htmlspecialchars($employee['permanent_address'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Current Address:</strong> Same as permanent
+                  <strong>Current Address:</strong> <?php echo htmlspecialchars($employee['current_address'] ?? 'N/A'); ?>
                 </p>
               </div>
               <div style="flex: 1">
@@ -156,13 +222,13 @@
                   Emergency Contact
                 </h3>
                 <p style="margin-bottom: 8px">
-                  <strong>Contact Person:</strong> Maria Dela Cruz
+                  <strong>Contact Person:</strong> <?php echo htmlspecialchars($employee['contact_person'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Relationship:</strong> Mother
+                  <strong>Relationship:</strong> <?php echo htmlspecialchars($employee['relationship'] ?? 'N/A'); ?>
                 </p>
                 <p style="margin-bottom: 8px">
-                  <strong>Contact No.:</strong> 0918-765-4321
+                  <strong>Contact No.:</strong> <?php echo htmlspecialchars($employee['contact_number'] ?? 'N/A'); ?>
                 </p>
               </div>
             </div>
@@ -172,15 +238,21 @@
         <!-- Request Supplies Section -->
         <section id="request" class="dashboard-section">
           <div class="profile-info-wrapper">
+            <div class="section-header" style="padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                <h2 style="font-size: 1.5rem; margin: 0;">Request Supplies</h2>
+                <button type="button" id="view-requests-btn" class="btn btn-secondary" style="font-size: 0.8rem; padding: 8px 12px;">
+                    <i class="fas fa-history"></i> View History
+                </button>
+            </div>
+
+            <?php if ($hasPendingRequests): ?>
+              <div class="alert" style="background: #fff3cd; color: #856404; padding: 12px 16px; border-radius: 8px; border: 1px solid #ffeeba; margin-bottom: 20px;">
+                <strong>Notice:</strong> You currently have a pending request. You must wait for it to be processed before submitting another.
+              </div>
+            <?php endif; ?>
+
             <!-- Dropdown to select form -->
-            <div
-              class="form-group"
-              style="
-                border-bottom: 1px solid var(--border-color);
-                padding-bottom: 1.5rem;
-                margin-bottom: 1.5rem;
-              "
-            >
+            <div class="form-group">
               <label for="request_type_select">Request Type</label>
               <select id="request_type_select" name="request_type_select">
                 <option value="bond_paper">Request Bond Paper</option>
@@ -198,12 +270,7 @@
               >
                 Request Bond Paper
               </h2>
-              <form
-                onsubmit="
-                  event.preventDefault();
-                  alert('Bond paper request submitted successfully!');
-                "
-              >
+              <form action="request_paper.php" method="POST">
                 <div class="form-group">
                   <label for="paper_size">Paper Size</label>
                   <select id="paper_size" name="paper_size" required>
@@ -234,7 +301,7 @@
                   />
                 </div>
                 <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingRequests ? 'disabled' : ''; ?> >
                     Submit Paper Request
                   </button>
                 </div>
@@ -249,12 +316,7 @@
               >
                 Request Other Office Supplies
               </h2>
-              <form
-                onsubmit="
-                  event.preventDefault();
-                  alert('General supply request submitted successfully!');
-                "
-              >
+              <form action="request_other_supply.php" method="POST">
                 <div class="form-group">
                   <label for="item_name">Item Name</label>
                   <input
@@ -277,17 +339,17 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="employee_name">Employee Name</label>
+                  <label for="other_department">Department</label>
                   <input
                     type="text"
-                    id="employee_name"
-                    name="employee_name"
-                    placeholder="Enter your full name"
+                    id="other_department"
+                    name="department"
+                    placeholder="e.g. HR, Engineering, Sales"
                     required
                   />
                 </div>
                 <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingRequests ? 'disabled' : ''; ?> >
                     Submit Request
                   </button>
                 </div>
@@ -381,51 +443,46 @@
             &times;
           </button>
         </div>
-        <form
-          id="employee-form"
-          onsubmit="
-            event.preventDefault();
-            alert('Form submitted for review!');
-          "
-          novalidate
-        >
-          <input type="hidden" name="employee_id" value="1" />
-
+        <form id="employee-form" action="../update_employee.php" method="POST">
           <fieldset>
             <legend>Personal Information</legend>
             <div class="form-group">
-              <label for="surname">Surname</label
-              ><input type="text" id="surname" name="surname" required />
-            </div>
-            <div class="form-group">
-              <label for="first_name">First Name</label
-              ><input type="text" id="first_name" name="first_name" required />
-            </div>
-            <div class="form-group">
-              <label for="middle_name">Middle Name (Optional)</label
-              ><input type="text" id="middle_name" name="middle_name" />
+              <label for="fullname">Full Name</label
+              ><input
+                type="text"
+                id="fullname"
+                name="fullname"
+                value="<?php echo htmlspecialchars($employee['name'] ?? ''); ?>"
+                required
+              />
             </div>
             <div class="form-group">
               <label for="civil_status">Civil Status</label>
               <select id="civil_status" name="civil_status" required>
                 <option value="">-- Select --</option>
-                <option value="Single">Single</option>
-                <option value="Married">Married</option>
-                <option value="Widowed">Widowed</option>
-                <option value="Separated">Separated</option>
+                <option value="Single" <?php if (($employee['civil_status'] ?? '') == 'Single') echo 'selected'; ?>>Single</option>
+                <option value="Married" <?php if (($employee['civil_status'] ?? '') == 'Married') echo 'selected'; ?>>Married</option>
+                <option value="Widowed" <?php if (($employee['civil_status'] ?? '') == 'Widowed') echo 'selected'; ?>>Widowed</option>
+                <option value="Separated" <?php if (($employee['civil_status'] ?? '') == 'Separated') echo 'selected'; ?>>Separated</option>
               </select>
             </div>
             <div class="form-group">
               <label for="gender">Gender</label>
               <select id="gender" name="gender" required>
                 <option value="">-- Select --</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="Male" <?php if (($employee['gender'] ?? '') == 'Male') echo 'selected'; ?>>Male</option>
+                <option value="Female" <?php if (($employee['gender'] ?? '') == 'Female') echo 'selected'; ?>>Female</option>
               </select>
             </div>
             <div class="form-group">
               <label for="birth_date">Date of Birth</label>
-              <input type="date" id="birth_date" name="birth_date" required />
+              <input
+                type="date"
+                id="birth_date"
+                name="date_of_birth"
+                value="<?php echo htmlspecialchars($employee['date_of_birth'] ?? ''); ?>"
+                required
+              />
             </div>
           </fieldset>
 
@@ -438,7 +495,7 @@
                 name="permanent_address"
                 rows="3"
                 required
-              ></textarea>
+              ><?php echo htmlspecialchars($employee['permanent_address'] ?? ''); ?></textarea>
             </div>
             <div class="form-group radio-group">
               <label>Is your current address your permanent address?</label>
@@ -470,7 +527,7 @@
                 id="current_address"
                 name="current_address"
                 rows="3"
-              ></textarea>
+              ><?php echo htmlspecialchars($employee['current_address'] ?? ''); ?></textarea>
             </div>
           </fieldset>
 
@@ -481,9 +538,9 @@
               ><input
                 type="tel"
                 id="contact_number"
-                name="contact_number"
+                name="personal_no"
                 required
-                placeholder="e.g., 09171234567"
+                value="<?php echo htmlspecialchars($employee['personal_no'] ?? ''); ?>"
               />
             </div>
             <div class="form-group">
@@ -503,7 +560,7 @@
                 id="personal_email"
                 name="personal_email"
                 required
-                placeholder="e.g., name@example.com"
+                value="<?php echo htmlspecialchars($employee['personal_email'] ?? ''); ?>"
               />
             </div>
             <div class="form-group">
@@ -512,7 +569,7 @@
                 type="email"
                 id="work_email"
                 name="work_email"
-                placeholder="e.g., name@vtsa.com"
+                value="<?php echo htmlspecialchars($employee['work_email'] ?? ''); ?>"
               />
             </div>
           </fieldset>
@@ -525,7 +582,8 @@
               ><input
                 type="text"
                 id="emergency_contact_person"
-                name="emergency_contact_person"
+                name="contact_person"
+                value="<?php echo htmlspecialchars($employee['contact_person'] ?? ''); ?>"
                 required
               />
             </div>
@@ -534,9 +592,9 @@
               ><input
                 type="text"
                 id="emergency_contact_relationship"
-                name="emergency_contact_relationship"
+                name="relationship"
                 required
-                placeholder="e.g., Spouse, Parent, Sibling"
+                value="<?php echo htmlspecialchars($employee['relationship'] ?? ''); ?>"
               />
             </div>
             <div class="form-group">
@@ -545,7 +603,8 @@
               ><input
                 type="tel"
                 id="emergency_contact_number"
-                name="emergency_contact_number"
+                name="contact_number"
+                value="<?php echo htmlspecialchars($employee['contact_number'] ?? ''); ?>"
                 required
               />
             </div>
@@ -588,6 +647,24 @@
         </form>
       </div>
     </div>
+
+    <!-- Request History Modal -->
+    <div id="request-history-modal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 700px; text-align: left;">
+        <div class="section-header" style="margin-bottom: 20px;">
+          <h2>My Supply Requests</h2>
+          <button type="button" id="close-history-modal" class="modal-close-btn">&times;</button>
+        </div>
+        <div id="request-history-content" class="table-wrapper" style="margin-top: 0; max-height: 60vh; overflow-y: auto;">
+          <!-- History table will be injected here by JS -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Pass PHP data to JavaScript
+      window.requestHistory = <?php echo json_encode($requests); ?>;
+    </script>
     <script src="script.js"></script>
   </body>
 </html>

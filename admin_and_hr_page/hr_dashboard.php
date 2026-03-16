@@ -1,4 +1,33 @@
-<!doctype html>
+<?php
+session_start();
+
+// Check if user is logged in and is an HR user
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'hr') {
+    header("Location: ../index.html");
+    exit();
+}
+
+// --- Database Connection ---
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "vtsa_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch all employees
+$result = $conn->query("SELECT * FROM employees");
+$employees_list = $result->fetch_all(MYSQLI_ASSOC);
+$employeesById = [];
+foreach ($employees_list as $employee) {
+    $employeesById[$employee['id']] = $employee;
+}
+
+$conn->close();
+?><!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -47,7 +76,7 @@
       <div class="sidebar-footer">
         <ul>
           <li>
-            <a href="../employee_page/login.html"
+            <a href="logout.php"
               ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
             >
           </li>
@@ -177,32 +206,37 @@
                   <th>Contact Number</th>
                   <th>Civil Status</th>
                   <th>Date of Birth</th>
-                  <th>Last Updated</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- This row represents an employee who has filled out their personnel record -->
-                <tr>
-                  <td>Brady, Marcia</td>
-                  <td>marcia@vtsa.com</td>
-                  <td>09171234567</td>
-                  <td>Single</td>
-                  <td>1990-05-15</td>
-                  <td>2023-10-26 09:45 AM</td>
-                  <td>
-                    <button
-                      class="action-btn view-btn"
-                      title="View Full Record"
-                    >
-                      <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="action-btn delete-btn" title="Delete Record">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                <!-- Add more employee rows here as they update their info -->
+                <?php if (!empty($employees_list)): ?>
+                  <?php foreach ($employees_list as $employee): ?>
+                    <tr>
+                      <td><?php echo htmlspecialchars($employee['name']); ?></td>
+                      <td><?php echo htmlspecialchars($employee['work_email'] ?? 'N/A'); ?></td>
+                      <td><?php echo htmlspecialchars($employee['personal_no'] ?? 'N/A'); ?></td>
+                      <td><?php echo htmlspecialchars($employee['civil_status'] ?? 'N/A'); ?></td>
+                      <td><?php echo htmlspecialchars($employee['date_of_birth'] ?? 'N/A'); ?></td>
+                      <td>
+                        <button
+                          class="action-btn view-btn"
+                          data-id="<?php echo $employee['id']; ?>"
+                          title="View Full Record"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn delete-btn" title="Delete Record">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="6" style="text-align: center;">No employee records found.</td>
+                  </tr>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -322,6 +356,36 @@
         </div>
       </div>
     </div>
+
+    <!-- Employee Details Modal -->
+    <div id="employee-details-modal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 600px; max-height: 95vh; overflow: auto; text-align: left">
+        <div class="section-header" style="margin-bottom: 20px">
+          <h3 id="modal-employee-name">Employee Details</h3>
+          <button type="button" id="close-employee-modal" class="modal-close-btn" style="float: right; background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  margin-left: auto;">&times;</button>
+        </div>
+        <div id="employee-details-content" class="table-wrapper" style="margin-top: 0">
+          <!-- Employee details table will be injected here by JS -->
+        </div>
+      </div>
+    </div>
+    <script>
+      window.employeesData = <?php echo json_encode($employeesById); ?>;
+    </script>
     <script src="hr_dashboard.js"></script>
   </body>
 </html>

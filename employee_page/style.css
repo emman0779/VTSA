@@ -647,7 +647,7 @@ legend {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 3000;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
@@ -693,4 +693,29 @@ legend {
 }
 .notification-info {
   color: var(--primary-color);
+}
+
+/* Modal Close Button (consistent with HR dashboard) */
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  margin-left: auto;
+  z-index: 30000;
+}
+
+.modal-close-btn:hover {
+  background-color: #e9ecef;
+  color: var(--danger-color);
 }

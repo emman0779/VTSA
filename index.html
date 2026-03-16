@@ -11,12 +11,7 @@
       <h2>Welcome Back</h2>
       <div class="sub-head">Sign in to your account</div>
 
-      <form
-        onsubmit="
-          event.preventDefault();
-          window.location.href = 'dashboard.html';
-        "
-      >
+      <form action="login.php" method="POST">
         <div class="form-group">
           <label for="email">Email address</label>
           <input
@@ -58,7 +53,7 @@
         <button type="submit" class="login-btn">Sign in</button>
 
         <div class="signup-message">
-          Don’t have an account? <a href="register.html">Create account</a>
+          Dont have an account? <a href="register.html">Create account</a>
         </div>
       </form>
     </div>

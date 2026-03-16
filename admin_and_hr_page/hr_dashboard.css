@@ -353,6 +353,30 @@ table tbody tr:hover {
   color: var(--danger-color);
 }
 
+/* Modal Close Button */
+.modal-close-btn {
+  background: transparent !important;
+  border: none !important;
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  margin-left: auto;
+}
+
+.modal-close-btn:hover {
+  background-color: transparent !important;
+  color: var(--danger-color);
+}
+
 /* 5. Dashboard Overview Cards & Charts */
 .stats-cards {
   display: grid;

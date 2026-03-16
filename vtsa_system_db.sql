@@ -153,6 +153,22 @@ CREATE TABLE `request_supplies` (
   FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE CASCADE
 );
 
+--
+-- Table structure for table `conference_bookings`
+--
+CREATE TABLE `conference_bookings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `employee_id` INT NOT NULL,
+  `department` VARCHAR(100) NOT NULL,
+  `booking_date` DATE NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  `purpose` VARCHAR(255) NULL DEFAULT NULL,
+  `status` VARCHAR(50) NOT NULL DEFAULT 'Pending',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE CASCADE
+);
+
 -- --------------------------------------------------------
 
 --

@@ -69,108 +69,116 @@ document.addEventListener("DOMContentLoaded", function () {
   showSection(window.location.hash);
 
   // --- Admin Dashboard Charts ---
-  const applicantCtx = document.getElementById("applicantChart");
-  const jobCtx = document.getElementById("jobChart");
+  // Guard against missing Chart.js (e.g., when this script is shared across pages)
+  if (typeof Chart !== "undefined") {
+    const applicantCtx = document.getElementById("applicantChart");
+    const jobCtx = document.getElementById("jobChart");
 
-  // Only initialize if the elements exist (to avoid errors on other pages)
-  if (applicantCtx && jobCtx) {
-    // Chart 1: Applicants vs Hires Trend (Line Chart)
-    new Chart(applicantCtx, {
-      type: "line",
-      data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-        datasets: [
-          {
-            label: "Total Applicants",
-            data: [45, 59, 80, 81, 105, 125],
-            borderColor: "#203864",
-            backgroundColor: "rgba(32, 56, 100, 0.1)",
-            fill: true,
-            tension: 0.4,
-          },
-          {
-            label: "Hired",
-            data: [5, 12, 15, 20, 25, 29], // Cumulative hires
-            borderColor: "#28a745",
-            backgroundColor: "rgba(40, 167, 69, 0.1)",
-            fill: true,
-            tension: 0.4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: "top" },
-          title: { display: true, text: "Recruitment Trends (6 Months)" },
+    if (applicantCtx && jobCtx) {
+      // Chart 1: Applicants vs Hires Trend (Line Chart)
+      new Chart(applicantCtx, {
+        type: "line",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          datasets: [
+            {
+              label: "Total Applicants",
+              data: [45, 59, 80, 81, 105, 125],
+              borderColor: "#203864",
+              backgroundColor: "rgba(32, 56, 100, 0.1)",
+              fill: true,
+              tension: 0.4,
+            },
+            {
+              label: "Hired",
+              data: [5, 12, 15, 20, 25, 29], // Cumulative hires
+              borderColor: "#28a745",
+              backgroundColor: "rgba(40, 167, 69, 0.1)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
         },
-        scales: {
-          y: { beginAtZero: true },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: true, text: "Recruitment Trends (6 Months)" },
+          },
+          scales: {
+            y: { beginAtZero: true },
+          },
         },
-      },
-    });
+      });
 
-    // Chart 2: Job Openings Distribution (Doughnut)
-    new Chart(jobCtx, {
-      type: "doughnut",
-      data: {
-        labels: ["Technician", "Admin Support", "Sales", "Engineering"],
-        datasets: [
-          {
-            data: [2, 1, 1, 2], // Adds up to 6 open positions
-            backgroundColor: ["#203864", "#ffc107", "#dc3545", "#17a2b8"],
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: "right" },
-          title: { display: true, text: "Open Positions by Department" },
+      // Chart 2: Job Openings Distribution (Doughnut)
+      new Chart(jobCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Technician", "Admin Support", "Sales", "Engineering"],
+          datasets: [
+            {
+              data: [2, 1, 1, 2], // Adds up to 6 open positions
+              backgroundColor: ["#203864", "#ffc107", "#dc3545", "#17a2b8"],
+              hoverOffset: 4,
+            },
+          ],
         },
-      },
-    });
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "right" },
+            title: { display: true, text: "Open Positions by Department" },
+          },
+        },
+      });
+    }
+  } else {
+    console.warn(
+      "Chart.js is not loaded; dashboard charts will not be rendered.",
+    );
   }
 
   // --- Supplies Overview Chart ---
-  const suppliesCtx = document.getElementById("suppliesChart");
-  if (suppliesCtx) {
-    new Chart(suppliesCtx, {
-      type: "pie",
-      data: {
-        labels: ["Requested Supplies (Month)", "Remaining Supplies"],
-        datasets: [
-          {
-            label: "Count",
-            data: [42, 1458], // Mock data: 42 requested, 1458 remaining
-            backgroundColor: [
-              "rgba(255, 193, 7, 0.8)", // Warning Color for requests
-              "rgba(40, 167, 69, 0.8)", // Success Color for remaining
-            ],
-            borderColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"],
-            borderWidth: 2,
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "top",
-          },
-          title: {
-            display: true,
-            text: "Monthly Supply Usage Overview",
-            font: { size: 16 },
+  if (typeof Chart !== "undefined") {
+    const suppliesCtx = document.getElementById("suppliesChart");
+    if (suppliesCtx) {
+      new Chart(suppliesCtx, {
+        type: "pie",
+        data: {
+          labels: ["Requested Supplies (Month)", "Remaining Supplies"],
+          datasets: [
+            {
+              label: "Count",
+              data: [42, 1458], // Mock data: 42 requested, 1458 remaining
+              backgroundColor: [
+                "rgba(255, 193, 7, 0.8)", // Warning Color for requests
+                "rgba(40, 167, 69, 0.8)", // Success Color for remaining
+              ],
+              borderColor: ["rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"],
+              borderWidth: 2,
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "Monthly Supply Usage Overview",
+              font: { size: 16 },
+            },
           },
         },
-      },
-    });
+      });
+    }
   }
 
   // --- Employee Form Logic (Address) ---
@@ -299,7 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
           );
           const statusClass =
-            req.status.toLowerCase() === "pending"
+            (req.status || "").toLowerCase() === "pending"
               ? "status-pending"
               : "status-hired"; // Using hired for approved
           tableHtml += `
@@ -317,15 +325,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       tableHtml += `</tbody></table>`;
       historyContent.innerHTML = tableHtml;
-      // Force the modal to show by directly setting its style
-      historyModal.style.opacity = "1";
-      historyModal.style.visibility = "visible";
+      historyModal.classList.add("visible");
     });
 
     const closeHistoryModal = () => {
-      // Force the modal to hide
-      historyModal.style.opacity = "0";
-      historyModal.style.visibility = "hidden";
+      historyModal.classList.remove("visible");
     };
     if (closeHistoryModalBtn) {
       closeHistoryModalBtn.addEventListener("click", closeHistoryModal);
@@ -333,5 +337,139 @@ document.addEventListener("DOMContentLoaded", function () {
     historyModal.addEventListener("click", (e) => {
       if (e.target === historyModal) closeHistoryModal();
     });
+  }
+
+  // --- Conference Schedule Modal ---
+  const viewScheduleBtn = document.getElementById("view-schedule-btn");
+  const scheduleModal = document.getElementById("schedule-modal");
+  const closeScheduleModalBtn = document.getElementById("close-schedule-modal");
+  let scheduleContent = document.getElementById("schedule-history-content");
+
+  console.log("Schedule modal elements:", {
+    viewScheduleBtn,
+    scheduleModal,
+    closeScheduleModalBtn,
+    scheduleContent,
+  });
+
+  const ensureScheduleContent = () => {
+    if (!scheduleContent && scheduleModal) {
+      scheduleContent = scheduleModal.querySelector(
+        "#schedule-history-content",
+      );
+    }
+    return scheduleContent;
+  };
+
+  const buildScheduleTableHtml = () => {
+    let tableHtml = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Department</th>
+                            <th>Participants</th>
+                            <th>Booked By</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+    const scheduleData = Array.isArray(window.conferenceSchedule)
+      ? window.conferenceSchedule
+      : [];
+
+    console.log("Schedule data:", scheduleData);
+
+    if (scheduleData.length > 0) {
+      scheduleData.forEach((booking) => {
+        let date = "N/A";
+        if (booking.booking_date) {
+          const dateObj = new Date(booking.booking_date);
+          if (!isNaN(dateObj.getTime())) {
+            date = dateObj.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+          }
+        }
+
+        const start = booking.start_time
+          ? String(booking.start_time).slice(0, 5)
+          : "";
+        const end = booking.end_time
+          ? String(booking.end_time).slice(0, 5)
+          : "";
+        const status = booking.status || "Pending";
+        const statusClass =
+          status.toLowerCase() === "pending"
+            ? "status-pending"
+            : "status-hired";
+
+        tableHtml += `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${start} - ${end}</td>
+                            <td>${booking.department}</td>
+                            <td>${booking.participants || "-"}</td>
+                            <td>${booking.employee_name}</td>
+                            <td><span class="status-pill ${statusClass}">${status}</span></td>
+                        </tr>
+                    `;
+      });
+    } else {
+      tableHtml += `
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No schedule entries found.</td>
+                        </tr>
+                    `;
+    }
+
+    tableHtml += `</tbody></table>`;
+    return tableHtml;
+  };
+
+  // Expose a global helper so that inline handlers can invoke the same logic
+  window.showScheduleModal = () => {
+    console.log("showScheduleModal called");
+    const contentEl = ensureScheduleContent();
+    if (!contentEl) {
+      console.warn("Schedule modal content container not found.");
+      return;
+    }
+
+    try {
+      contentEl.innerHTML = buildScheduleTableHtml();
+    } catch (error) {
+      console.error("Error building schedule table:", error);
+      contentEl.innerHTML =
+        "<div style='padding: 1rem; text-align:center;'>Unable to load schedule. Please refresh the page.</div>";
+    }
+
+    if (scheduleModal) {
+      scheduleModal.classList.add("visible");
+    }
+  };
+
+  if (viewScheduleBtn && scheduleModal) {
+    console.log("Attaching click handler to viewScheduleBtn");
+    viewScheduleBtn.addEventListener("click", window.showScheduleModal);
+
+    const closeScheduleModal = () => {
+      scheduleModal.classList.remove("visible");
+    };
+
+    if (closeScheduleModalBtn) {
+      closeScheduleModalBtn.addEventListener("click", closeScheduleModal);
+    }
+
+    scheduleModal.addEventListener("click", (e) => {
+      if (e.target === scheduleModal) closeScheduleModal();
+    });
+  } else {
+    console.warn("viewScheduleBtn or scheduleModal not found");
   }
 });

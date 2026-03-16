@@ -55,12 +55,32 @@ $stmt_supplies->close();
 // Sort requests by date, descending
 usort($requests, fn($a, $b) => strtotime($b['date_time_requested']) <=> strtotime($a['date_time_requested']));
 
-// Determine if there is an active pending request
-$hasPendingRequests = false;
+// Determine if there is an active pending request (supplies)
+$hasPendingSupplies = false;
 foreach ($requests as $req) {
     if (isset($req['status']) && strtolower($req['status']) === 'pending') {
-        $hasPendingRequests = true;
+        $hasPendingSupplies = true;
         break;
+    }
+}
+
+// Determine if the current employee already has a pending conference booking
+$pendingConferenceStmt = $conn->prepare("SELECT COUNT(*) as cnt FROM conference_bookings WHERE employee_id = ? AND status = 'Pending'");
+$pendingConferenceStmt->bind_param("i", $employee_id);
+$pendingConferenceStmt->execute();
+$pendingConferenceResult = $pendingConferenceStmt->get_result();
+$pendingConferenceCount = $pendingConferenceResult->fetch_assoc()['cnt'] ?? 0;
+$pendingConferenceStmt->close();
+
+$hasPendingConference = ($pendingConferenceCount > 0);
+
+// Fetch Conference Schedule for the modal
+$conferenceBookings = [];
+$sql_conf = "SELECT cb.*, e.name AS employee_name FROM conference_bookings cb JOIN employees e ON cb.employee_id = e.id ORDER BY cb.booking_date ASC, cb.start_time ASC";
+$result_conf = $conn->query($sql_conf);
+if ($result_conf) {
+    while ($row = $result_conf->fetch_assoc()) {
+        $conferenceBookings[] = $row;
     }
 }
 
@@ -245,7 +265,7 @@ $conn->close();
                 </button>
             </div>
 
-            <?php if ($hasPendingRequests): ?>
+            <?php if ($hasPendingSupplies): ?>
               <div class="alert" style="background: #fff3cd; color: #856404; padding: 12px 16px; border-radius: 8px; border: 1px solid #ffeeba; margin-bottom: 20px;">
                 <strong>Notice:</strong> You currently have a pending request. You must wait for it to be processed before submitting another.
               </div>
@@ -301,7 +321,7 @@ $conn->close();
                   />
                 </div>
                 <div class="form-actions">
-                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingRequests ? 'disabled' : ''; ?> >
+                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingSupplies ? 'disabled' : ''; ?> >
                     Submit Paper Request
                   </button>
                 </div>
@@ -349,7 +369,7 @@ $conn->close();
                   />
                 </div>
                 <div class="form-actions">
-                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingRequests ? 'disabled' : ''; ?> >
+                  <button type="submit" class="btn btn-primary" <?php echo $hasPendingSupplies ? 'disabled' : ''; ?> >
                     Submit Request
                   </button>
                 </div>
@@ -361,17 +381,23 @@ $conn->close();
         <!-- Conference Schedule Section -->
         <section id="conference" class="dashboard-section">
           <div class="profile-info-wrapper">
-            <h1 class="centered-header">Book Conference Hall</h1>
+            <div class="section-header">
+              <h1 class="centered-header">Book Conference Hall</h1>
+              <button type="button" id="view-schedule-btn" class="btn btn-secondary" onclick="openScheduleModal()">
+                <i class="fas fa-calendar-alt"></i> View Schedule
+              </button>
+            </div>
             <p class="centered-header-description">
               Check availability and schedule your meeting.
             </p>
 
-            <form
-              onsubmit="
-                event.preventDefault();
-                alert('Booking request submitted to Admin!');
-              "
-            >
+            <?php if ($hasPendingConference): ?>
+              <div class="alert" style="background: #fff3cd; color: #856404; padding: 12px 16px; border-radius: 8px; border: 1px solid #ffeeba; margin-bottom: 20px;">
+                <strong>Notice:</strong> You currently have a pending conference booking. Please wait for it to be processed before submitting another.
+              </div>
+            <?php endif; ?>
+
+            <form action="request_conference.php" method="POST">
               <div class="form-group">
                 <label for="department_name">Department Name</label>
                 <input
@@ -379,6 +405,26 @@ $conn->close();
                   id="department_name"
                   name="department_name"
                   placeholder="e.g. Marketing"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="purpose">Purpose / Meeting Title</label>
+                <input
+                  type="text"
+                  id="purpose"
+                  name="purpose"
+                  placeholder="e.g. Monthly Check-In"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="participants">No. of Participants</label>
+                <input
+                  type="number"
+                  id="participants"
+                  name="participants"
+                  min="1"
                   required
                 />
               </div>
@@ -407,7 +453,7 @@ $conn->close();
                 </div>
               </div>
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" <?php echo $hasPendingConference ? 'disabled' : ''; ?> >
                   Submit Booking
                 </button>
               </div>
@@ -629,7 +675,7 @@ $conn->close();
                 type="checkbox"
                 id="declaration"
                 name="declaration"
-                requiredssss
+                required
               />
               <label for="declaration"
                 >I declare that the information I have provided is true,
@@ -661,10 +707,79 @@ $conn->close();
       </div>
     </div>
 
+    <!-- Conference Schedule Modal -->
+    <div id="schedule-modal" class="modal-overlay" onclick="if (event.target === this) closeScheduleModal()">
+      <div class="modal-content" style="max-width: 800px; text-align: left;">
+        <div class="section-header" style="margin-bottom: 20px;">
+          <h2>Conference Hall Schedule</h2>
+          <button type="button" id="close-schedule-modal" class="modal-close-btn" onclick="closeScheduleModal()">&times;</button>
+        </div>
+        <div id="schedule-history-content" class="table-wrapper" style="margin-top: 0; max-height: 60vh; overflow-y: auto;">
+          <!-- Schedule table will be injected here by JS -->
+        </div>
+      </div>
+    </div>
+
     <script>
       // Pass PHP data to JavaScript
       window.requestHistory = <?php echo json_encode($requests); ?>;
+      window.conferenceSchedule = <?php echo json_encode($conferenceBookings); ?>;
+
+      // Fallback modal helpers (ensure the schedule modal works even if the external script fails)
+      function openScheduleModal() {
+        if (typeof window.showScheduleModal === "function") {
+          window.showScheduleModal();
+          return;
+        }
+
+        const modal = document.getElementById("schedule-modal");
+        const contentDiv = document.getElementById("schedule-history-content");
+        if (!modal || !contentDiv) {
+          console.warn("Schedule modal elements not found.");
+          return;
+        }
+
+        // Fallback: Populate table manually if script.js didn't
+        const schedule = window.conferenceSchedule || [];
+        let html = `<table><thead><tr><th>Date</th><th>Time</th><th>Department</th><th>Participants</th><th>Booked By</th><th>Status</th></tr></thead><tbody>`;
+        
+        if (schedule.length === 0) {
+            html += `<tr><td colspan="6" style="text-align: center;">No schedule entries found.</td></tr>`;
+        } else {
+            schedule.forEach(booking => {
+                const date = booking.booking_date ? new Date(booking.booking_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+                const start = booking.start_time ? booking.start_time.substring(0, 5) : '';
+                const end = booking.end_time ? booking.end_time.substring(0, 5) : '';
+                const statusClass = (booking.status || 'Pending').toLowerCase() === 'pending' ? 'status-pending' : 'status-hired';
+                
+                html += `<tr><td>${date}</td><td>${start} - ${end}</td><td>${booking.department || ''}</td><td>${booking.participants || '-'}</td><td>${booking.employee_name || ''}</td><td><span class="status-pill ${statusClass}">${booking.status || 'Pending'}</span></td></tr>`;
+            });
+        }
+        html += `</tbody></table>`;
+        contentDiv.innerHTML = html;
+
+        // Ensure the modal is visible even if CSS rules are not applied.
+        modal.style.display = "flex";
+        modal.style.opacity = "1";
+        modal.style.visibility = "visible";
+        modal.classList.add("visible");
+      }
+
+      function closeScheduleModal() {
+        if (typeof window.closeScheduleModal === "function" && window.closeScheduleModal !== closeScheduleModal) {
+          // Use script-defined close handler if available
+          window.closeScheduleModal();
+          return;
+        }
+
+        const modal = document.getElementById("schedule-modal");
+        if (!modal) return;
+
+        modal.style.opacity = "";
+        modal.style.visibility = "";
+        modal.classList.remove("visible");
+      }
     </script>
-    <script src="script.js"></script>
+    <script src="script.js?v=<?php echo time(); ?>"></script>
   </body>
 </html>

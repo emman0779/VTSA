@@ -6,6 +6,60 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     header("Location: ../index.html");
     exit();
 }
+
+// --- Database Connection ---
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "vtsa_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch conference bookings
+$conferenceBookings = [];
+$sql_conf = "SELECT cb.*, e.name AS employee_name FROM conference_bookings cb JOIN employees e ON cb.employee_id = e.id ORDER BY cb.booking_date ASC, cb.start_time ASC";
+$result_conf = $conn->query($sql_conf);
+if ($result_conf) {
+    while ($row = $result_conf->fetch_assoc()) {
+        $conferenceBookings[] = $row;
+    }
+}
+
+// --- Fetch Supply Requests ---
+$allRequests = [];
+$pendingRequestCount = 0;
+
+// 1. Bond Paper Requests
+$sql_paper = "SELECT r.id, r.date_time_requested, 'Bond Paper' as request_type, r.paper_size as item_name, r.quantity, e.name as requestor_name, r.department, r.status 
+              FROM request_bpaper r 
+              JOIN employees e ON r.employee_id = e.id";
+$res_paper = $conn->query($sql_paper);
+if ($res_paper) {
+    while ($row = $res_paper->fetch_assoc()) {
+        $allRequests[] = $row;
+        if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
+    }
+}
+
+// 2. Other Supplies Requests
+$sql_supplies = "SELECT r.id, r.date_time_requested, 'Other Supplies' as request_type, r.item_name, r.quantity, e.name as requestor_name, r.department, r.status 
+                 FROM request_supplies r 
+                 JOIN employees e ON r.employee_id = e.id";
+$res_supplies = $conn->query($sql_supplies);
+if ($res_supplies) {
+    while ($row = $res_supplies->fetch_assoc()) {
+        $allRequests[] = $row;
+        if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
+    }
+}
+
+// Sort requests by date (newest first)
+usort($allRequests, function($a, $b) {
+    return strtotime($b['date_time_requested']) <=> strtotime($a['date_time_requested']);
+});
 ?>
 <!doctype html>
 <html lang="en">
@@ -74,7 +128,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
               <div class="card-icon"><i class="fas fa-box-open"></i></div>
               <div class="card-info">
                 <h4>Pending Requests</h4>
-                <p>12</p>
+                <p><?php echo $pendingRequestCount; ?></p>
               </div>
             </div>
             <div class="card">
@@ -114,39 +168,51 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Mar 12, 2026</td>
-                  <td>Bond Paper</td>
-                  <td>A4</td>
-                  <td>5 Reams</td>
-                  <td>HR Department</td>
-                  <td>
-                    <span class="status-pill status-pending">Pending</span>
-                  </td>
-                  <td>
-                    <button class="action-btn view-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="action-btn delete-btn">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Mar 11, 2026</td>
-                  <td>Other Supplies</td>
-                  <td>Whiteboard Markers</td>
-                  <td>1 Box</td>
-                  <td>John Doe</td>
-                  <td>
-                    <span class="status-pill status-hired">Approved</span>
-                  </td>
-                  <td>
-                    <button class="action-btn delete-btn">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+                <?php if (!empty($allRequests)): ?>
+                  <?php foreach ($allRequests as $req): ?>
+                    <tr>
+                      <td><?php echo date('M j, Y', strtotime($req['date_time_requested'])); ?></td>
+                      <td><?php echo htmlspecialchars($req['request_type']); ?></td>
+                      <td><?php echo htmlspecialchars($req['item_name']); ?></td>
+                      <td>
+                        <?php 
+                          echo htmlspecialchars($req['quantity']); 
+                          if ($req['request_type'] === 'Bond Paper') echo ' Reams';
+                        ?>
+                      </td>
+                      <td><?php echo htmlspecialchars($req['requestor_name']) . ' / ' . htmlspecialchars($req['department']); ?></td>
+                      <td>
+                        <?php 
+                          $statusClass = 'status-pending'; // Default
+                          $s = strtolower($req['status']);
+                          if ($s === 'approved') $statusClass = 'status-hired';
+                          elseif ($s === 'rejected' || $s === 'cancelled') $statusClass = 'status-closed';
+                        ?>
+                        <span class="status-pill <?php echo $statusClass; ?>"><?php echo htmlspecialchars($req['status']); ?></span>
+                      </td>
+                      <td>
+                        <!-- Approve Form -->
+                        <form action="../update_request_status.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="req_id" value="<?php echo $req['id']; ?>">
+                            <input type="hidden" name="req_type" value="<?php echo htmlspecialchars($req['request_type']); ?>">
+                            <input type="hidden" name="status" value="Approved">
+                            <button type="submit" class="action-btn view-btn" title="Approve"><i class="fas fa-check"></i></button>
+                        </form>
+                        <!-- Reject Form -->
+                        <form action="../update_request_status.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="req_id" value="<?php echo $req['id']; ?>">
+                            <input type="hidden" name="req_type" value="<?php echo htmlspecialchars($req['request_type']); ?>">
+                            <input type="hidden" name="status" value="Rejected">
+                            <button type="submit" class="action-btn delete-btn" title="Reject"><i class="fas fa-times"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="7" style="text-align: center;">No requests found.</td>
+                  </tr>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -164,43 +230,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                   <th>Date</th>
                   <th>Time</th>
                   <th>Department</th>
-                  <th>Activity</th>
+                  <th>Booked By</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Mar 15, 2026</td>
-                  <td>09:00 AM - 11:00 AM</td>
-                  <td>Marketing</td>
-                  <td>Quarterly Planning</td>
-                  <td>
-                    <span class="status-pill status-hired">Confirmed</span>
-                  </td>
-                  <td>
-                    <button class="action-btn delete-btn">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Mar 16, 2026</td>
-                  <td>01:00 PM - 03:00 PM</td>
-                  <td>Engineering</td>
-                  <td>Safety Training</td>
-                  <td>
-                    <span class="status-pill status-pending">Pending</span>
-                  </td>
-                  <td>
-                    <button class="action-btn view-btn">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    <button class="action-btn delete-btn">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
+                <?php if (!empty($conferenceBookings)): ?>
+                  <?php foreach ($conferenceBookings as $booking): ?>
+                    <tr>
+                      <td><?php echo date('M j, Y', strtotime($booking['booking_date'])); ?></td>
+                      <td><?php echo date('h:i A', strtotime($booking['start_time'])); ?> - <?php echo date('h:i A', strtotime($booking['end_time'])); ?></td>
+                      <td><?php echo htmlspecialchars($booking['department']); ?></td>
+                      <td><?php echo htmlspecialchars($booking['employee_name']); ?></td>
+                      <td>
+                        <span class="status-pill <?php echo strtolower($booking['status']) === 'pending' ? 'status-pending' : 'status-hired'; ?>">
+                          <?php echo htmlspecialchars($booking['status']); ?>
+                        </span>
+                      </td>
+                      <td>
+                        <button class="action-btn delete-btn">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="6" style="text-align: center;">No conference bookings found.</td>
+                  </tr>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>

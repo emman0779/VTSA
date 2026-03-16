@@ -88,7 +88,7 @@ if ($is_employee) {
 if ($stmt->execute()) {
     $user_type = $is_employee ? "Employee" : "Applicant";
     // Display a success message using the site's styling
-    echo "<!DOCTYPE html><html><head><title>Registration Success</title><link rel='stylesheet' href='style.css'></head><body class='login-page'><div class='login-card'><h2>Registration Successful!</h2><p>{$user_type} account created for {$email}.</p><br><a href='index.html' class='login-btn' style='text-decoration:none;text-align:center;'>Proceed to Login</a></div></body></html>";
+    echo "<!DOCTYPE html><html><head><title>Registration Success</title><link rel='stylesheet' href='style.css'></head><body class='login-page'><div class='login-card'><h2>Registration Successful!</h2><p>{$user_type} account created for {$email}.</p><br><a href='index.html' class='login-btn' style='text-decoration:none;text-align:center;display:block;margin:0 auto;width:fit-content;'>Proceed to Login</a></div></body></html>";
 } else {
     // Provide a generic error for the user, but log the detailed SQL error for the developer
     error_log("SQL Error: " . $stmt->error);

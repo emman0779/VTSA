@@ -90,7 +90,7 @@ $conn->close();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee Dashboard</title>
+    <title class="top-bar-title">Employee Dashboard</title>
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -108,21 +108,19 @@ $conn->close();
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <a href="#profile" class="nav-link active"
-              ><i class="fas fa-user-edit"></i>
-              <span>Employee Information</span></a
-            >
+            <a href="#profile" class="nav-link active">
+              <i class="fas fa-user-edit"></i>
+              <span>Employee Information</span></a>
           </li>
           <li>
-            <a href="#request" class="nav-link"
-              ><i class="fas fa-box-open"></i> <span>Request Supplies</span></a
-            >
+            <a href="#request" class="nav-link">
+              <i class="fas fa-box-open"></i>
+              <span>Request Supplies</span></a>
           </li>
           <li>
-            <a href="#conference" class="nav-link"
-              ><i class="fas fa-calendar-alt"></i>
-              <span>Conference Schedule</span></a
-            >
+            <a href="#conference" class="nav-link">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Conference Schedule</span></a>
           </li>
         </ul>
       </nav>

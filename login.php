@@ -94,7 +94,7 @@ if ($result->num_rows > 0) {
         $_SESSION['user_name'] = $row['name'];
         $_SESSION['user_type'] = 'applicant';
         // Redirect to Applicant Dashboard
-        header("Location: applicant_page/applicant_dashboard.html");
+        header("Location: applicant_page/index.html");
         exit();
     }
 }

@@ -70,6 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- Supplies Overview Charts ---
   const bondPaperCtx = document.getElementById("bondPaperChart");
   if (bondPaperCtx) {
+    const bpData = window.supplyChartData
+      ? window.supplyChartData.bondPaper
+      : { requested: 15, remaining: 285 };
+
     new Chart(bondPaperCtx, {
       type: "pie",
       data: {
@@ -77,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
         datasets: [
           {
             label: "Reams",
-            data: [15, 285], // Mock data
+            data: [bpData.requested, bpData.remaining],
             backgroundColor: [
               "rgba(255, 159, 64, 0.8)",
               "rgba(54, 162, 235, 0.8)",
@@ -107,6 +111,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const otherSuppliesCtx = document.getElementById("otherSuppliesChart");
   if (otherSuppliesCtx) {
+    const osData = window.supplyChartData
+      ? window.supplyChartData.otherSupplies
+      : { requested: 27, remaining: 1173 };
+
     new Chart(otherSuppliesCtx, {
       type: "pie",
       data: {
@@ -114,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         datasets: [
           {
             label: "Items",
-            data: [27, 1173], // Mock data
+            data: [osData.requested, osData.remaining],
             backgroundColor: [
               "rgba(255, 99, 132, 0.8)",
               "rgba(75, 192, 192, 0.8)",
@@ -139,6 +147,54 @@ document.addEventListener("DOMContentLoaded", function () {
           },
         },
       },
+    });
+  }
+
+  // --- Export Requests Modal Logic ---
+  const exportRequestsBtn = document.getElementById("export-requests-btn");
+  const exportRequestsModal = document.getElementById("export-requests-modal");
+  const cancelExportRequestsBtn = document.getElementById(
+    "cancel-export-requests",
+  );
+
+  if (exportRequestsBtn && exportRequestsModal) {
+    exportRequestsBtn.addEventListener("click", function () {
+      exportRequestsModal.classList.add("visible");
+    });
+
+    cancelExportRequestsBtn.addEventListener("click", function () {
+      exportRequestsModal.classList.remove("visible");
+    });
+
+    exportRequestsModal.addEventListener("click", function (event) {
+      if (event.target === exportRequestsModal) {
+        exportRequestsModal.classList.remove("visible");
+      }
+    });
+  }
+
+  // --- Export Conference Modal Logic ---
+  const exportConferenceBtn = document.getElementById("export-conference-btn");
+  const exportConferenceModal = document.getElementById(
+    "export-conference-modal",
+  );
+  const cancelExportConferenceBtn = document.getElementById(
+    "cancel-export-conference",
+  );
+
+  if (exportConferenceBtn && exportConferenceModal) {
+    exportConferenceBtn.addEventListener("click", function () {
+      exportConferenceModal.classList.add("visible");
+    });
+
+    cancelExportConferenceBtn.addEventListener("click", function () {
+      exportConferenceModal.classList.remove("visible");
+    });
+
+    exportConferenceModal.addEventListener("click", function (event) {
+      if (event.target === exportConferenceModal) {
+        exportConferenceModal.classList.remove("visible");
+      }
     });
   }
 });

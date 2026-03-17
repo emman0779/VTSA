@@ -70,15 +70,33 @@ document.addEventListener("DOMContentLoaded", function () {
   const jobCtx = document.getElementById("jobChart");
 
   if (applicantCtx && jobCtx) {
+    // Use dynamic data if available, else fallback to static defaults
+    const trendLabels = window.recruitmentTrendsData
+      ? window.recruitmentTrendsData.labels
+      : ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+    const trendApplicants = window.recruitmentTrendsData
+      ? window.recruitmentTrendsData.applicants
+      : [0, 0, 0, 0, 0, 0];
+    const trendHired = window.recruitmentTrendsData
+      ? window.recruitmentTrendsData.hired
+      : [0, 0, 0, 0, 0, 0];
+
+    const jobLabels = window.openJobsData
+      ? window.openJobsData.labels
+      : ["Job A", "Job B", "Job C"];
+    const jobCounts = window.openJobsData
+      ? window.openJobsData.counts
+      : [5, 10, 3];
+
     // Chart 1: Applicants vs Hires Trend (Line Chart)
     new Chart(applicantCtx, {
       type: "line",
       data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        labels: trendLabels,
         datasets: [
           {
             label: "Total Applicants",
-            data: [45, 59, 80, 81, 105, 125],
+            data: trendApplicants,
             borderColor: "#203864",
             backgroundColor: "rgba(32, 56, 100, 0.1)",
             fill: true,
@@ -86,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           {
             label: "Hired",
-            data: [5, 12, 15, 20, 25, 29], // Cumulative hires
+            data: trendHired,
             borderColor: "#28a745",
             backgroundColor: "rgba(40, 167, 69, 0.1)",
             fill: true,
@@ -107,15 +125,33 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
 
-    // Chart 2: Job Openings Distribution (Doughnut)
+    // Chart 2: Applicants per Open Position (Doughnut)
+    // Generate a palette that repeats if there are many jobs
+    const baseColors = [
+      "#203864",
+      "#ffc107",
+      "#dc3545",
+      "#17a2b8",
+      "#6610f2",
+      "#fd7e14",
+      "#28a745",
+      "#6f42c1",
+    ];
+    const bgColors = jobLabels.map(
+      (_, index) => baseColors[index % baseColors.length],
+    );
+
     new Chart(jobCtx, {
       type: "doughnut",
       data: {
-        labels: ["Technician", "Admin Support", "Sales", "Engineering"],
+        labels: jobLabels,
         datasets: [
           {
-            data: [2, 1, 1, 2], // Adds up to 6 open positions
-            backgroundColor: ["#203864", "#ffc107", "#dc3545", "#17a2b8"],
+            label: "Applicants",
+            data: jobCounts,
+            backgroundColor: bgColors,
+            borderColor: "#ffffff",
+            borderWidth: 2,
             hoverOffset: 4,
           },
         ],
@@ -124,41 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: "right" },
-          title: { display: true, text: "Open Positions by Department" },
+          legend: { position: "right", labels: { boxWidth: 15 } },
+          title: { display: true, text: "Applicants per Open Position" },
         },
       },
-    });
-  }
-
-  // --- Admin Export Modal Logic ---
-  const exportBtn = document.getElementById("export-btn");
-  const exportModal = document.getElementById("export-modal");
-  const confirmExportBtn = document.getElementById("confirm-export");
-  const cancelExportBtn = document.getElementById("cancel-export");
-  const exportFormatSelect = document.getElementById("export-format");
-
-  if (exportBtn && exportModal) {
-    exportBtn.addEventListener("click", function () {
-      exportModal.classList.add("visible");
-    });
-
-    // Handle Confirm
-    confirmExportBtn.addEventListener("click", function () {
-      const format = exportFormatSelect.value;
-      if (format) {
-        alert("Exporting file as ".concat(format, "...")); // Placeholder for actual export logic
-        exportModal.classList.remove("visible");
-        exportFormatSelect.value = ""; // Reset selection
-      } else {
-        alert("Please select a file format.");
-      }
-    });
-
-    // Handle Cancel
-    cancelExportBtn.addEventListener("click", function () {
-      exportModal.classList.remove("visible");
-      exportFormatSelect.value = ""; // Reset selection
     });
   }
 
@@ -225,6 +230,56 @@ document.addEventListener("DOMContentLoaded", function () {
     closeEmployeeModalBtn.addEventListener("click", closeEmployeeModal);
     employeeModal.addEventListener("click", (event) => {
       if (event.target === employeeModal) closeEmployeeModal();
+    });
+  }
+
+  // --- Export Applicants Modal Logic ---
+  const exportApplicantsBtn = document.getElementById("export-applicants-btn");
+  const exportApplicantsModal = document.getElementById(
+    "export-applicants-modal",
+  );
+  const cancelExportApplicantsBtn = document.getElementById(
+    "cancel-export-applicants",
+  );
+
+  if (exportApplicantsBtn && exportApplicantsModal) {
+    exportApplicantsBtn.addEventListener("click", function () {
+      exportApplicantsModal.classList.add("visible");
+    });
+
+    cancelExportApplicantsBtn.addEventListener("click", function () {
+      exportApplicantsModal.classList.remove("visible");
+    });
+
+    exportApplicantsModal.addEventListener("click", function (event) {
+      if (event.target === exportApplicantsModal) {
+        exportApplicantsModal.classList.remove("visible");
+      }
+    });
+  }
+
+  // --- Export Employees Modal Logic ---
+  const exportEmployeesBtn = document.getElementById("export-employees-btn");
+  const exportEmployeesModal = document.getElementById(
+    "export-employees-modal",
+  );
+  const cancelExportEmployeesBtn = document.getElementById(
+    "cancel-export-employees",
+  );
+
+  if (exportEmployeesBtn && exportEmployeesModal) {
+    exportEmployeesBtn.addEventListener("click", function () {
+      exportEmployeesModal.classList.add("visible");
+    });
+
+    cancelExportEmployeesBtn.addEventListener("click", function () {
+      exportEmployeesModal.classList.remove("visible");
+    });
+
+    exportEmployeesModal.addEventListener("click", function (event) {
+      if (event.target === exportEmployeesModal) {
+        exportEmployeesModal.classList.remove("visible");
+      }
     });
   }
 });

@@ -58,18 +58,6 @@
   cursor: pointer;
 }
 
-.top-bar-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: "Poppins", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
 .header-logo {
   margin-left: auto;
   height: 50px;
@@ -128,9 +116,6 @@
   transition: all 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
-}
-.sidebar-nav li a span{
-  margin: 9px;
 }
 
 .sidebar-nav li a i,
@@ -727,7 +712,6 @@ legend {
     background-color 0.2s ease,
     color 0.2s ease;
   margin-left: auto;
-  z-index: 30000;
 }
 
 .modal-close-btn:hover {

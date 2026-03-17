@@ -28,30 +28,44 @@ if ($result_conf) {
     }
 }
 
+// Count pending conference bookings
+$pendingConferenceCount = 0;
+foreach ($conferenceBookings as $booking) {
+    if (strtolower($booking['status']) === 'pending') {
+        $pendingConferenceCount++;
+    }
+}
+
 // --- Fetch Supply Requests ---
 $allRequests = [];
 $pendingRequestCount = 0;
 
+// Track totals for charts
+$totalBondPaperRequested = 0;
+$totalOtherSuppliesRequested = 0;
+
 // 1. Bond Paper Requests
-$sql_paper = "SELECT r.id, r.date_time_requested, 'Bond Paper' as request_type, r.paper_size as item_name, r.quantity, e.name as requestor_name, r.department, r.status 
+$sql_paper = "SELECT r.id, r.date_time_requested, 'Bond Paper' as request_type, r.paper_size as item_name, r.quantity, e.name as requestor_name, r.department, r.status, e.e_signature
               FROM request_bpaper r 
               JOIN employees e ON r.employee_id = e.id";
 $res_paper = $conn->query($sql_paper);
 if ($res_paper) {
     while ($row = $res_paper->fetch_assoc()) {
         $allRequests[] = $row;
+        $totalBondPaperRequested += (int)$row['quantity'];
         if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
     }
 }
 
 // 2. Other Supplies Requests
-$sql_supplies = "SELECT r.id, r.date_time_requested, 'Other Supplies' as request_type, r.item_name, r.quantity, e.name as requestor_name, r.department, r.status 
+$sql_supplies = "SELECT r.id, r.date_time_requested, 'Other Supplies' as request_type, r.item_name, r.quantity, e.name as requestor_name, r.department, r.status, e.e_signature
                  FROM request_supplies r 
                  JOIN employees e ON r.employee_id = e.id";
 $res_supplies = $conn->query($sql_supplies);
 if ($res_supplies) {
     while ($row = $res_supplies->fetch_assoc()) {
         $allRequests[] = $row;
+        $totalOtherSuppliesRequested += (int)$row['quantity'];
         if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
     }
 }
@@ -67,7 +81,7 @@ usort($allRequests, function($a, $b) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - VTSA System</title>
-    <link rel="stylesheet" href="hr_dashboard.css" />
+    <link rel="stylesheet" href="hr_dashboard.css?v=<?php echo time(); ?>" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -134,8 +148,8 @@ usort($allRequests, function($a, $b) {
             <div class="card">
               <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
               <div class="card-info">
-                <h4>Hall Bookings</h4>
-                <p>3</p>
+                <h4>Pending Bookings</h4>
+                <p><?php echo $pendingConferenceCount; ?></p>
               </div>
             </div>
           </div>
@@ -153,6 +167,9 @@ usort($allRequests, function($a, $b) {
         <section id="requests" class="dashboard-section">
           <div class="section-header">
             <h1>Manage Supply Requests</h1>
+            <button id="export-requests-btn" class="btn btn-primary">
+              <i class="fas fa-file-export"></i> Export to Excel
+            </button>
           </div>
           <div class="table-wrapper">
             <table>
@@ -222,6 +239,9 @@ usort($allRequests, function($a, $b) {
         <section id="conference" class="dashboard-section">
           <div class="section-header">
             <h1>Conference Hall Schedule</h1>
+            <button id="export-conference-btn" class="btn btn-primary">
+              <i class="fas fa-file-export"></i> Export to Excel
+            </button>
           </div>
           <div class="table-wrapper">
             <table>
@@ -279,6 +299,43 @@ usort($allRequests, function($a, $b) {
         </section>
       </main>
     </div>
-    <script src="admin_dashboard.js"></script>
+    <!-- Export Requests Confirmation Modal -->
+    <div id="export-requests-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Export Supply Requests</h3>
+        <p>Do you want to continue and export all supply requests to an Excel file?</p>
+        <div class="modal-actions">
+          <a href="export_requests.php" id="confirm-export-requests" class="btn btn-primary" style="text-decoration: none;">Continue</a>
+          <button type="button" id="cancel-export-requests" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Conference Confirmation Modal -->
+    <div id="export-conference-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Export Conference Bookings</h3>
+        <p>Do you want to continue and export all conference bookings to an Excel file?</p>
+        <div class="modal-actions">
+          <a href="export_conference.php" id="confirm-export-conference" class="btn btn-primary" style="text-decoration: none;">Continue</a>
+          <button type="button" id="cancel-export-conference" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Pass dynamic data from PHP to JavaScript
+      window.supplyChartData = {
+        bondPaper: {
+          requested: <?php echo $totalBondPaperRequested; ?>,
+          remaining: <?php echo max(0, 300 - $totalBondPaperRequested); ?> // Assuming 300 limit
+        },
+        otherSupplies: {
+          requested: <?php echo $totalOtherSuppliesRequested; ?>,
+          remaining: <?php echo max(0, 1200 - $totalOtherSuppliesRequested); ?> // Assuming 1200 limit
+        }
+      };
+    </script>
+    <script src="admin_dashboard.js?v=<?php echo time(); ?>"></script>
   </body>
 </html>

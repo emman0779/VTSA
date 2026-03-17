@@ -1,9 +1,22 @@
+<?php
+// --- Database Connection ---
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "vtsa_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) { die("Could not connect to the job service. Please
+try again later."); } $open_jobs = []; $sql = "SELECT
+job_title, description FROM job_listing_database WHERE status = 'Open' ORDER BY
+job_title ASC"; $result = $conn->query($sql); if ($result) { while($row =
+$result->fetch_assoc()) { $open_jobs[] = $row; } } $conn->close(); ?>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=1" />
     <title>Document</title>
   </head>
   <body>
@@ -14,9 +27,9 @@
         /></a>
         <ul class="nav-links">
           <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="applicant_dashboard.html#applied">Applied</a></li>
-          <li><a href="applicant_dashboard.html#status">Status</a></li>
-          <li><a href="applicant_dashboard.html#profile">Profile</a></li>
+          <li><a href="applicant_dashboard.php#applied">Applied</a></li>
+          <li><a href="applicant_dashboard.php#status">Status</a></li>
+          <li><a href="applicant_dashboard.php#profile">Profile</a></li>
         </ul>
         <a href="#" class="logo-right"
           ><img src="images/logo2.png" alt="Secondary company logo"
@@ -30,9 +43,9 @@
       /></a>
       <ul class="nav-links">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="applicant_dashboard.html#applied">Applied</a></li>
-        <li><a href="applicant_dashboard.html#status">Status</a></li>
-        <li><a href="applicant_dashboard.html#profile">Profile</a></li>
+        <li><a href="applicant_dashboard.php#applied">Applied</a></li>
+        <li><a href="applicant_dashboard.php#status">Status</a></li>
+        <li><a href="applicant_dashboard.php#profile">Profile</a></li>
       </ul>
       <a href="#" class="logo-right"
         ><img src="images/schneider_white.png" alt="Secondary company logo"
@@ -49,10 +62,7 @@
           quibusdam blanditiis nihil ad iure molestias! Ad ipsum dolores
           praesentium rem fuga?
         </p>
-        <a
-          href="applicant_dashboard.html#applied"
-          class="hero-apply-button"
-          role="button"
+        <a href="#jobs-section" class="hero-apply-button" role="button"
           >APPLY NOW!</a
         >
       </aside>
@@ -79,103 +89,42 @@
       </div>
     </div>
 
-    <main>
+    <main id="jobs-section">
+      <?php if (!empty($open_jobs)): ?> <?php foreach ($open_jobs as $job): ?>
       <div class="jobCards">
-        <h4>Test and Commissioning Technician</h4>
+        <h4><?php echo htmlspecialchars($job['job_title']); ?></h4>
         <p>
-          We are looking for a passionate Software Engineer to design, develop,
-          and install software solutions.
+          <?php $description = htmlspecialchars($job['description']); if
+          (strlen($description) > 120) { echo substr($description, 0, 120) .
+          '...'; } else { echo $description; } ?>
         </p>
         <div>
-          <a href="">View Details</a>
+          <a href="#">View Details</a>
           <a
-            href="applicant_dashboard.html#applied"
+            href="applicant_dashboard.php#applied"
             class="job-apply-button"
             role="button"
             >APPLY</a
           >
         </div>
       </div>
-      <div class="jobCards">
-        <h4>PMS Technician</h4>
-        <p>
-          We are seeking an experienced Product Manager to guide the success of
-          a product and lead the cross-functional team.
+      <?php endforeach; ?> <?php else: ?>
+      <div
+        style="
+          grid-column: 1 / -1;
+          text-align: center;
+          padding: 2rem;
+          background: #fff;
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        "
+      >
+        <h3>No Open Positions At The Moment</h3>
+        <p style="color: #666; margin-top: 0.5rem">
+          Please check back later for new opportunities.
         </p>
-        <div>
-          <a href="">View Details</a>
-          <a
-            href="applicant_dashboard.html#applied"
-            class="job-apply-button"
-            role="button"
-            >APPLY</a
-          >
-        </div>
       </div>
-      <div class="jobCards">
-        <h4>Test and Commissioning Supervisor</h4>
-        <p>
-          Join our team to create intuitive and visually appealing interfaces
-          for our users.
-        </p>
-        <div>
-          <a href="">View Details</a>
-          <a
-            href="applicant_dashboard.html#applied"
-            class="job-apply-button"
-            role="button"
-            >APPLY</a
-          >
-        </div>
-      </div>
-      <div class="jobCards">
-        <h4>Admin Staff</h4>
-        <p>
-          We're hiring a Data Scientist to analyze large amounts of raw
-          information to find patterns and build data products.
-        </p>
-        <div>
-          <a href="">View Details</a>
-          <a
-            href="applicant_dashboard.html#applied"
-            class="job-apply-button"
-            role="button"
-            >APPLY</a
-          >
-        </div>
-      </div>
-      <div class="jobCards">
-        <h4>Sales & Marketing Officer</h4>
-        <p>
-          Looking for a DevOps Engineer to work with our software developers,
-          system operators, and other IT staff.
-        </p>
-        <div>
-          <a href="">View Details</a>
-          <a
-            href="applicant_dashboard.html#applied"
-            class="job-apply-button"
-            role="button"
-            >APPLY</a
-          >
-        </div>
-      </div>
-      <div class="jobCards">
-        <h4>Digital Marketing Officer</h4>
-        <p>
-          Responsible for the quality of software development and deployment.
-          Automated and manual testing.
-        </p>
-        <div>
-          <a href="">View Details</a>
-          <a
-            href="applicant_dashboard.html#applied"
-            class="job-apply-button"
-            role="button"
-            >APPLY</a
-          >
-        </div>
-      </div>
+      <?php endif; ?>
     </main>
 
     <footer class="footer-section">
@@ -254,13 +203,46 @@
     <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="modal-overlay">
       <div class="modal-content">
-        <p>Do you want to send your resume?</p>
+        <h3
+          id="modal-title"
+          style="margin-top: 0; margin-bottom: 15px; color: #203864"
+        >
+          Application Notice
+        </h3>
+        <p id="modal-message">
+          You cannot apply at this time due to an existing application or
+          cooldown period.
+        </p>
         <div class="modal-actions">
-          <button id="confirm-yes">Yes</button>
-          <button id="confirm-no">No</button>
+          <button
+            id="confirm-yes"
+            type="button"
+            style="
+              padding: 8px 20px;
+              cursor: pointer;
+              background-color: #203864;
+              color: white;
+              border: none;
+              border-radius: 5px;
+            "
+          >
+            Yes
+          </button>
+          <button
+            id="confirm-no"
+            type="button"
+            onclick="
+              document
+                .getElementById('confirmation-modal')
+                .classList.remove('visible')
+            "
+            style="padding: 8px 20px; cursor: pointer"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
   </body>
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </html>

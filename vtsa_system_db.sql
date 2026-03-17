@@ -16,18 +16,20 @@ CREATE TABLE `applicants` (
   `name` VARCHAR(255) NOT NULL,
   `desired_position` VARCHAR(255) NULL DEFAULT NULL,
   `date_time_applied` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `date_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `email` VARCHAR(255) NOT NULL UNIQUE,
+  `gender` VARCHAR(50) DEFAULT NULL,
+  `source_of_hiring` VARCHAR(255) DEFAULT NULL,
   `phone` VARCHAR(25) NULL DEFAULT NULL,
   `address` TEXT NULL DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
   `application` VARCHAR(255) DEFAULT NULL,
   `resume` VARCHAR(255) DEFAULT NULL,
   `profile_pic` VARCHAR(255) DEFAULT NULL,
-  `status` ENUM('Pending', 'Interview', 'Hired', 'Rejected') NOT NULL DEFAULT 'Pending'
+  `status` VARCHAR(50) NOT NULL DEFAULT 'Pending'
 );
 
 --
--- Table structure for table `applicant_skills`
 --
 CREATE TABLE `applicant_skills` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +101,9 @@ CREATE TABLE `admin_database` (
 CREATE TABLE `job_listing_database` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `job_title` VARCHAR(255) NOT NULL,
-  `description` TEXT
+  `description` TEXT,
+  `status` VARCHAR(50) DEFAULT 'Open',
+  `applicants` INT DEFAULT 0
 );
 
 --
@@ -175,11 +179,11 @@ CREATE TABLE `conference_bookings` (
 -- Dumping data for testing
 --
 
--- Insert a default HR user (Password: @VTSA_HR2026 - Run set_hr_password.php to update hash)
+-- Insert a default HR user (Password: @VTSA_HR2026)
 INSERT INTO `hr_database` (`name`, `email`, `password`) VALUES
-('HR Manager', 'hr@vtsa.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('HR Manager', 'hr@vtsa.com', '$2y$10$zP8Bv5j3G7kL9mN1oP2qRu.sT4uV6wX8yZ0aB1cE2dF3gH4iJ5kL');
 
--- Insert a default Admin user (Password: @ADMINvtsa_2026 - Run set_admin_password.php to update hash)
+-- Insert a default Admin user (Password: @ADMINvtsa_2026)
 INSERT INTO `admin_database` (`name`, `email`, `password`) VALUES
-('Admin User', 'admin@vtsa.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('Admin User', 'admin@vtsa.com', '$2y$10$R.sT4uV6wX8yZ0aB1cE2d.uF3gH4iJ5kL6mN7oP8qR9sT0uV1wX');
 COMMIT;

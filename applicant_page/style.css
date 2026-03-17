@@ -8,6 +8,10 @@
   font-family: "Poppins", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth !important; /* Smooth scrolling for anchor links */
+}
+
 body {
   background-color: white;
   color: #333;

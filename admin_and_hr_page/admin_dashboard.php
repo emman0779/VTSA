@@ -41,8 +41,8 @@ $allRequests = [];
 $pendingRequestCount = 0;
 
 // Track totals for charts
-$totalBondPaperRequested = 0;
-$totalOtherSuppliesRequested = 0;
+$totalBondPaperApproved = 0;
+$totalOtherSuppliesApproved = 0;
 
 // 1. Bond Paper Requests
 $sql_paper = "SELECT r.id, r.date_time_requested, 'Bond Paper' as request_type, r.paper_size as item_name, r.quantity, e.name as requestor_name, r.department, r.status, e.e_signature
@@ -52,7 +52,9 @@ $res_paper = $conn->query($sql_paper);
 if ($res_paper) {
     while ($row = $res_paper->fetch_assoc()) {
         $allRequests[] = $row;
-        $totalBondPaperRequested += (int)$row['quantity'];
+        if (strtolower($row['status']) === 'approved') {
+            $totalBondPaperApproved += (int)$row['quantity'];
+        }
         if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
     }
 }
@@ -65,7 +67,9 @@ $res_supplies = $conn->query($sql_supplies);
 if ($res_supplies) {
     while ($row = $res_supplies->fetch_assoc()) {
         $allRequests[] = $row;
-        $totalOtherSuppliesRequested += (int)$row['quantity'];
+        if (strtolower($row['status']) === 'approved') {
+            $totalOtherSuppliesApproved += (int)$row['quantity'];
+        }
         if (strtolower($row['status']) === 'pending') $pendingRequestCount++;
     }
 }
@@ -74,6 +78,23 @@ if ($res_supplies) {
 usort($allRequests, function($a, $b) {
     return strtotime($b['date_time_requested']) <=> strtotime($a['date_time_requested']);
 });
+
+// --- Fetch Inventory ---
+$inventoryItems = [];
+$totalBondPaperInStock = 0;
+$totalOtherSuppliesInStock = 0;
+$sql_inv = "SELECT * FROM inventory ORDER BY id DESC";
+// Suppress error if table doesn't exist yet (will be created by add_inventory.php)
+if ($result_inv = $conn->query($sql_inv)) {
+    while ($row = $result_inv->fetch_assoc()) {
+        $inventoryItems[] = $row;
+        if ($row['category'] === 'Bond Paper') {
+            $totalBondPaperInStock += (int)$row['quantity'];
+        } else {
+            $totalOtherSuppliesInStock += (int)$row['quantity'];
+        }
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -112,6 +133,11 @@ usort($allRequests, function($a, $b) {
             <a href="#conference" class="nav-link"
               ><i class="fas fa-calendar-alt"></i>
               <span>Conference Hall</span></a
+            >
+          </li>
+          <li>
+            <a href="#inventory" class="nav-link"
+              ><i class="fas fa-warehouse"></i> <span>Inventory</span></a
             >
           </li>
         </ul>
@@ -297,6 +323,70 @@ usort($allRequests, function($a, $b) {
             </table>
           </div>
         </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory" class="dashboard-section">
+          <div class="section-header">
+            <h1>Inventory Management</h1>
+            <button id="add-inventory-btn" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Add New Item
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Category</th>
+                  <th>Stock Level</th>
+                  <th>Unit</th>
+                  <th>Status</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php if (!empty($inventoryItems)): 
+                    foreach ($inventoryItems as $item): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($item['name']); ?></td>
+                        <td><?php echo htmlspecialchars($item['category']); ?></td>
+                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                        <td><?php echo htmlspecialchars($item['unit']); ?></td>
+                        <td>
+                          <?php 
+                            $statusClass = ($item['quantity'] > 0) ? 'status-open' : 'status-closed';
+                            $statusText = ($item['quantity'] > 0) ? 'In Stock' : 'Out of Stock';
+                          ?>
+                          <span class="status-pill <?php echo $statusClass; ?>"><?php echo $statusText; ?></span>
+                        </td>
+                        <td><?php echo date('M j, Y', strtotime($item['last_updated'])); ?></td>
+                        <td>
+                            <button class="action-btn edit-btn edit-inventory-btn" 
+                                    data-id="<?php echo $item['id']; ?>"
+                                    data-name="<?php echo htmlspecialchars($item['name']); ?>"
+                                    data-category="<?php echo htmlspecialchars($item['category']); ?>"
+                                    data-quantity="<?php echo htmlspecialchars($item['quantity']); ?>"
+                                    data-unit="<?php echo htmlspecialchars($item['unit']); ?>"
+                                    title="Edit Item">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="delete_inventory.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
+                                <button type="submit" class="action-btn delete-btn" title="Delete Item" onclick="return confirm('Are you sure you want to delete this item? This action cannot be undone.');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endforeach; 
+                else: ?>
+                    <tr><td colspan="7" style="text-align: center;">No inventory items found.</td></tr>
+                <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </main>
     </div>
     <!-- Export Requests Confirmation Modal -->
@@ -323,16 +413,91 @@ usort($allRequests, function($a, $b) {
       </div>
     </div>
 
+    <!-- Add Inventory Modal -->
+    <div id="add-inventory-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h3>Add Inventory Item</h3>
+            <button type="button" id="close-inventory-modal" class="modal-close-btn" style="float: right;">&times;</button>
+        </div>
+        <form action="add_inventory.php" method="POST">
+            <div class="form-group">
+                <label for="item_name">Item Name</label>
+                <input type="text" id="item_name" name="item_name" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="Bond Paper">Bond Paper</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="stock_quantity">Quantity</label>
+                <input type="number" id="stock_quantity" name="quantity" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="unit">Unit</label>
+                <input type="text" id="unit" name="unit" placeholder="e.g. pcs, boxes, reams" required>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Add Item</button>
+                <button type="button" id="cancel-inventory" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Inventory Modal -->
+    <div id="edit-inventory-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h3>Edit Inventory Item</h3>
+            <button type="button" id="close-edit-inventory-modal" class="modal-close-btn" style="float: right;">&times;</button>
+        </div>
+        <form action="update_inventory.php" method="POST">
+            <input type="hidden" id="edit_item_id" name="item_id">
+            <div class="form-group">
+                <label for="edit_item_name">Item Name</label>
+                <input type="text" id="edit_item_name" name="item_name" required>
+            </div>
+            <div class="form-group">
+                <label for="edit_category">Category</label>
+                <select id="edit_category" name="category" required>
+                    <option value="Bond Paper">Bond Paper</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="edit_stock_quantity">Quantity</label>
+                <input type="number" id="edit_stock_quantity" name="quantity" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="edit_unit">Unit</label>
+                <input type="text" id="edit_unit" name="unit" placeholder="e.g. pcs, boxes, reams" required>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" id="cancel-edit-inventory" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+      </div>
+    </div>
+
     <script>
       // Pass dynamic data from PHP to JavaScript
       window.supplyChartData = {
         bondPaper: {
-          requested: <?php echo $totalBondPaperRequested; ?>,
-          remaining: <?php echo max(0, 300 - $totalBondPaperRequested); ?> // Assuming 300 limit
+          requested: <?php echo $totalBondPaperApproved; ?>,
+          remaining: <?php echo $totalBondPaperInStock; ?>
         },
         otherSupplies: {
-          requested: <?php echo $totalOtherSuppliesRequested; ?>,
-          remaining: <?php echo max(0, 1200 - $totalOtherSuppliesRequested); ?> // Assuming 1200 limit
+          requested: <?php echo $totalOtherSuppliesApproved; ?>,
+          remaining: <?php echo $totalOtherSuppliesInStock; ?>
         }
       };
     </script>

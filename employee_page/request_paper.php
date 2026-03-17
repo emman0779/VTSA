@@ -52,6 +52,21 @@ if ($pendingCount > 0) {
     exit();
 }
 
+// --- Check Inventory Stock Level (Bond Paper) ---
+// We search for an inventory item that starts with the paper size (e.g., "A4" matches "A4 Bond Paper")
+$search_term = $paper_size . "%";
+$stmt_check = $conn->prepare("SELECT id, name, quantity FROM inventory WHERE category = 'Bond Paper' AND name LIKE ? LIMIT 1");
+$stmt_check->bind_param("s", $search_term);
+$stmt_check->execute();
+$res_check = $stmt_check->get_result();
+$stock_item = $res_check->fetch_assoc();
+$stmt_check->close();
+
+if (!$stock_item || $stock_item['quantity'] < $quantity) {
+    echo "<script>alert('Insufficient stock for " . htmlspecialchars($paper_size) . " Bond Paper.'); window.location.href='employee_dashboard.php#request';</script>";
+    exit();
+}
+
 $stmt = $conn->prepare("INSERT INTO request_bpaper (employee_id, paper_size, quantity, department, status) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("isiss", $employee_id, $paper_size, $quantity, $department, $status);
 

@@ -84,6 +84,16 @@ if ($result_conf) {
     }
 }
 
+// Fetch inventory for the supplies dropdown
+$other_supply_items = [];
+$sql_inventory = "SELECT name, unit, quantity FROM inventory WHERE category != 'Bond Paper' ORDER BY name ASC";
+$result_inventory = $conn->query($sql_inventory);
+if ($result_inventory) {
+    while ($row = $result_inventory->fetch_assoc()) {
+        $other_supply_items[] = $row;
+    }
+}
+
 $conn->close();
 ?><!doctype html>
 <html lang="en">
@@ -337,13 +347,18 @@ $conn->close();
               <form action="request_other_supply.php" method="POST">
                 <div class="form-group">
                   <label for="item_name">Item Name</label>
-                  <input
-                    type="text"
-                    id="item_name"
-                    name="item_name"
-                    placeholder="e.g. Stapler, Ballpen, Ink Cartridge"
-                    required
-                  />
+                  <select id="item_name" name="item_name" required>
+                    <option value="">-- Select Available Item --</option>
+                    <?php foreach ($other_supply_items as $item): ?>
+                      <?php 
+                        $qty = (int)$item['quantity'];
+                        $displayText = htmlspecialchars($item['name']);
+                        $displayText .= ($qty > 0) ? ' (' . htmlspecialchars($item['unit']) . ') - Stock: ' . $qty : ' - Out of Stock';
+                        $disabled = ($qty > 0) ? '' : 'disabled';
+                      ?>
+                      <option value="<?php echo htmlspecialchars($item['name']); ?>" <?php echo $disabled; ?>><?php echo $displayText; ?></option>
+                    <?php endforeach; ?>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="quantity">Quantity</label>

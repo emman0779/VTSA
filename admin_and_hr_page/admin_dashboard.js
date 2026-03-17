@@ -197,4 +197,83 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // --- Add Inventory Modal Logic ---
+  const addInventoryBtn = document.getElementById("add-inventory-btn");
+  const addInventoryModal = document.getElementById("add-inventory-modal");
+  const closeInventoryModalBtn = document.getElementById(
+    "close-inventory-modal",
+  );
+  const cancelInventoryBtn = document.getElementById("cancel-inventory");
+
+  if (addInventoryBtn && addInventoryModal) {
+    addInventoryBtn.addEventListener("click", function () {
+      addInventoryModal.classList.add("visible");
+    });
+
+    const closeInventoryModal = () => {
+      addInventoryModal.classList.remove("visible");
+    };
+
+    if (closeInventoryModalBtn)
+      closeInventoryModalBtn.addEventListener("click", closeInventoryModal);
+    if (cancelInventoryBtn)
+      cancelInventoryBtn.addEventListener("click", closeInventoryModal);
+
+    addInventoryModal.addEventListener("click", function (event) {
+      if (event.target === addInventoryModal) {
+        addInventoryModal.classList.remove("visible");
+      }
+    });
+  }
+
+  // --- Edit Inventory Modal Logic ---
+  const editInventoryModal = document.getElementById("edit-inventory-modal");
+  const closeEditInventoryModalBtn = document.getElementById(
+    "close-edit-inventory-modal",
+  );
+  const cancelEditInventoryBtn = document.getElementById(
+    "cancel-edit-inventory",
+  );
+  const inventorySection = document.getElementById("inventory");
+
+  if (editInventoryModal && inventorySection) {
+    // Use event delegation to catch clicks on edit buttons
+    inventorySection.addEventListener("click", function (event) {
+      const editBtn = event.target.closest(".edit-inventory-btn");
+      if (editBtn) {
+        // Get data from the button's data attributes
+        const id = editBtn.dataset.id;
+        const name = editBtn.dataset.name;
+        const category = editBtn.dataset.category;
+        const quantity = editBtn.dataset.quantity;
+        const unit = editBtn.dataset.unit;
+
+        // Populate the modal form
+        document.getElementById("edit_item_id").value = id;
+        document.getElementById("edit_item_name").value = name;
+        document.getElementById("edit_category").value = category;
+        document.getElementById("edit_stock_quantity").value = quantity;
+        document.getElementById("edit_unit").value = unit;
+
+        // Show the modal
+        editInventoryModal.classList.add("visible");
+      }
+    });
+
+    const closeEditModal = () => {
+      editInventoryModal.classList.remove("visible");
+    };
+
+    if (closeEditInventoryModalBtn)
+      closeEditInventoryModalBtn.addEventListener("click", closeEditModal);
+    if (cancelEditInventoryBtn)
+      cancelEditInventoryBtn.addEventListener("click", closeEditModal);
+
+    editInventoryModal.addEventListener("click", function (event) {
+      if (event.target === editInventoryModal) {
+        closeEditModal();
+      }
+    });
+  }
 });

@@ -52,6 +52,20 @@ if ($pendingCount > 0) {
     exit();
 }
 
+// --- Check Inventory Stock Level ---
+$stmt_check = $conn->prepare("SELECT quantity FROM inventory WHERE name = ?");
+$stmt_check->bind_param("s", $item_name);
+$stmt_check->execute();
+$res_check = $stmt_check->get_result();
+$stock_item = $res_check->fetch_assoc();
+$stmt_check->close();
+
+if (!$stock_item || $stock_item['quantity'] < $quantity) {
+    echo "<script>alert('Insufficient stock for the requested item.'); window.location.href='employee_dashboard.php#request';</script>";
+    exit();
+}
+
+// --- Insert Request ---
 $stmt = $conn->prepare("INSERT INTO request_supplies (employee_id, item_name, quantity, department, status) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("isiss", $employee_id, $item_name, $quantity, $department, $status);
 
